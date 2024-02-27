@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.nft-item:hover .nft-preview-container {
+  display: flex; /* Change from hidden to flex to show the container */
+}
+
+.user-item:hover .user-preview-container {
+  display: block;
+}
