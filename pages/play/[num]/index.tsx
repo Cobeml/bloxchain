@@ -252,7 +252,17 @@ export default function Game() {
                 break;
             }
             case "__chargeUser": {
-                
+                const { args, key } = event.data;
+                let status: boolean = false;
+                try {
+
+                } catch (e) {
+                    console.error(e);
+                    status = false;
+                } finally {
+                    const iframe = document.getElementById("game")! as HTMLIFrameElement;
+                    iframe.contentWindow?.postMessage({ data: { key, success: status } });
+                }
                 break;
             }
         }

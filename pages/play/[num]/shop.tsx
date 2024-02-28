@@ -37,9 +37,9 @@ export default function Shop() {
         setTokenAddresses(tokens);
         setNftAddresses(nfts);
     };
-    const buy = async (listingId: number) => {
+    const buy = async (listingId: number, chargeToken: string, price: number) => {
         try {
-            await buyItem(gameNum, listingId, GameAddressLocalhost);
+            await buyItem(gameNum, listingId, chargeToken, price, GameAddressLocalhost);
             setListings((listings => listings.filter((listing: ShopListing) => listing.listingId !== listingId)));
         } catch (e) {
             console.error(e);
@@ -65,7 +65,13 @@ export default function Shop() {
                 }
             </div>
             <div className="grid grid-cols-4">
-                {listings.map((listing: ShopListing) => <ListingWidget listing={listing} onBuy={buy} />)}
+                {listings.map((listing: ShopListing) => (
+                    <ListingWidget
+                        key={listing.listingId}
+                        listing={listing}
+                        onBuy={() => buy(listing.listingId, listing.chargeToken, listing.price)}
+                    />
+                ))}
             </div>
             {showListing &&
                 <div className="absolute w-auto h-auto bg-gray-400 p-4 rounded-lg flex flex-col justify-center items-center gap-2" style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>

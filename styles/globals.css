@@ -10,3 +10,6 @@
 .user-item:hover .user-preview-container {
   display: block;
 }
+html {
+  background-color: gray;
+}

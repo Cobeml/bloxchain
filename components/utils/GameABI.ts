@@ -1,5 +1,5 @@
 
-export const GameAddressLocalhost = "0x95401dc811bb5740090279Ba06cfA8fcF6113778";
+export const GameAddressLocalhost = "0x0B306BF915C4d645ff596e518fAf3F9669b97016";
 export const GamePkeyLocalhost = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
 export const tokenABI = [
     "function balanceOf(address) view returns (uint256)",
@@ -8,7 +8,8 @@ export const tokenABI = [
     "function description() view returns (string)",
     "function transfer(address to, uint256 amount) returns (bool)",
     "function transferFrom(address from, address to, uint value) returns (bool)",
-    "function supply() returns(uint)"
+    "function supply() view returns(uint)",
+    "function approve(address a, uint amount)"
 ];
 export const nftABI = [
     "function balanceOf(address owner) view returns (uint256)",
@@ -31,10 +32,236 @@ export const ownableAbi = [
     "function owner() view returns (address)"
 ];
 export const GameShopABI = [
-    "function getGameForToken(address token) external view returns(uint g)",
-    "function viewActiveGameTokens() external view returns(address[])"
-]; // copy paste it in when generated
-export const LeaderboardABI = [
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_gameContract",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+            }
+        ],
+        "name": "OwnableInvalidOwner",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
+        ],
+        "name": "OwnableUnauthorizedAccount",
+        "type": "error"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "previousOwner",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }
+        ],
+        "name": "OwnershipTransferred",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "listingId",
+                "type": "uint256"
+            }
+        ],
+        "name": "buy",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "count",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "gameContract",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+            }
+        ],
+        "name": "getGameForToken",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "g",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bool",
+                "name": "isToken",
+                "type": "bool"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "gameId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "sellToken",
+                "type": "address"
+            }
+        ],
+        "name": "list",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "listings",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "isToken",
+                "type": "bool"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "gameId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "tokenAddress",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "sellToken",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "seller",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "game",
+                "type": "uint256"
+            }
+        ],
+        "name": "redeem",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "renounceOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
     {
         "inputs": [
             {
@@ -43,9 +270,60 @@ export const LeaderboardABI = [
                 "type": "uint256"
             },
             {
-                "internalType": "uint256[]",
-                "name": "prizes",
-                "type": "uint256[]"
+                "internalType": "uint256",
+                "name": "supply",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "symbol",
+                "type": "string"
+            }
+        ],
+        "name": "split",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }
+        ],
+        "name": "transferOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "viewActiveGameTokens",
+        "outputs": [
+            {
+                "internalType": "address[]",
+                "name": "t",
+                "type": "address[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
+];// copy paste it in when generated
+export const LeaderboardABI = [
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "game",
+                "type": "uint256"
             }
         ],
         "name": "initializeLeaderboard",
@@ -92,11 +370,6 @@ export const LeaderboardABI = [
                         "internalType": "address[]",
                         "name": "winners",
                         "type": "address[]"
-                    },
-                    {
-                        "internalType": "uint256[]",
-                        "name": "prizes",
-                        "type": "uint256[]"
                     },
                     {
                         "internalType": "uint256[]",
@@ -401,6 +674,11 @@ export const GameABI = [
         "type": "constructor"
     },
     {
+        "inputs": [],
+        "name": "ERC721EnumerableForbiddenBatchMint",
+        "type": "error"
+    },
+    {
         "inputs": [
             {
                 "internalType": "address",
@@ -501,6 +779,22 @@ export const GameABI = [
             }
         ],
         "name": "ERC721NonexistentToken",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "ERC721OutOfBoundsIndex",
         "type": "error"
     },
     {
@@ -659,14 +953,31 @@ export const GameABI = [
     {
         "inputs": [
             {
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "code",
-                "type": "string"
+                "components": [
+                    {
+                        "internalType": "string",
+                        "name": "code",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "description",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "imgSrc",
+                        "type": "string"
+                    }
+                ],
+                "internalType": "struct Game.GameInfo",
+                "name": "gameInfo",
+                "type": "tuple"
             },
             {
                 "components": [
@@ -738,11 +1049,6 @@ export const GameABI = [
                 "internalType": "struct Game.UserData",
                 "name": "userData",
                 "type": "tuple"
-            },
-            {
-                "internalType": "uint256[]",
-                "name": "prizes",
-                "type": "uint256[]"
             }
         ],
         "name": "createGame",
@@ -1007,6 +1313,49 @@ export const GameABI = [
         "inputs": [
             {
                 "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "tokenByIndex",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "tokenOfOwnerByIndex",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
                 "name": "tokenId",
                 "type": "uint256"
             }
@@ -1017,6 +1366,19 @@ export const GameABI = [
                 "internalType": "string",
                 "name": "",
                 "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "totalSupply",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
             }
         ],
         "stateMutability": "view",
@@ -1107,6 +1469,16 @@ export const GameABI = [
                         "internalType": "address[]",
                         "name": "tokens",
                         "type": "address[]"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "description",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "imgSrc",
+                        "type": "string"
                     }
                 ],
                 "internalType": "struct Game.GameData",

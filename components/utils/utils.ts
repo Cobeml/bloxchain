@@ -68,7 +68,7 @@ type User = {
     keys: string[];
     values: string[];
 };
-export async function publishGame(name: string, code: string, address: string): Promise<void> {
+export async function publishGame(name: string, code: string, address: string, description: string, imgSrc: string): Promise<void> {
     console.log(`Publishing ${name}`);
     if (!window.ethereum) return;
     try {
@@ -132,7 +132,7 @@ export async function publishGame(name: string, code: string, address: string): 
         const provider = new BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
         const contract = new Contract(address, GameABI, signer);
-        const tx = await contract.createGame(name, code, tokens, nfts, user, []);
+        const tx = await contract.createGame({ name, code, description, imgSrc }, tokens, nfts, user);
         const receipt = await tx.wait();
         console.log(receipt);
     } catch (e) {
@@ -306,7 +306,7 @@ export async function getMyGames(userAddress: string, contractAddress: string): 
     const gameShopAddress = await contract.gameShop();
     const gameShopContract = new Contract(gameShopAddress, GameShopABI, provider);
     const gameTokens = await gameShopContract.viewActiveGameTokens();
-    const tokens: { id: number, balance: number, supply: number; }[] = [];
+    const tokens: { id: number, balance: number, supply: number; address: number; }[] = [];
     for (const token of gameTokens) {
         const tokenContract = new Contract(token, tokenABI, provider);
         const balance = Number(await tokenContract.balanceOf(userAddress));
@@ -317,6 +317,7 @@ export async function getMyGames(userAddress: string, contractAddress: string): 
                 id: gameId,
                 balance,
                 supply,
+                address: token,
             });
         }
     }
@@ -327,6 +328,8 @@ export async function getMyGames(userAddress: string, contractAddress: string): 
         const tokenId = await nftContract.tokenOfOwnerByIndex(userAddress, i);
         nfts.push(Number(tokenId));
     }
+    const gameContract = await gameShopContract.gameContract();
+    console.log({ gameContract });
     return { tokens, nfts };
 }
 
@@ -390,7 +393,7 @@ export async function listItemOwner(game: number, item: string, isNFT: boolean, 
     const shopAddress = await contract.shop();
     const signer = new Wallet(ownerPkey, provider);
     const shop = new Contract(shopAddress, ShopABI, signer);
-    shop.listItemOwner(game, item, isNFT, nftId, tokenAmount, chargeToken, price);
+    shop.listItem(game, item, isNFT, nftId, tokenAmount, chargeToken, price);
 }
 export async function listItem(game: number, item: string, isNFT: boolean, nftId: number, tokenAmount: number, chargeToken: string, price: number, contractAddress: string): Promise<void> {
     if (!window.ethereum) return;
@@ -398,15 +401,114 @@ export async function listItem(game: number, item: string, isNFT: boolean, nftId
     const contract = new Contract(contractAddress, GameABI, provider);
     const shopAddress = await contract.shop();
     const signer = await provider.getSigner();
+    if (isNFT) {
+        const nftContract = new Contract(item, nftABI, signer);
+        const tx = await nftContract.approve(shopAddress, nftId);
+        const receipt = await tx.wait();
+        console.log(receipt);
+    } else {
+        const tokenContract = new Contract(item, tokenABI, signer);
+        const tx = await tokenContract.approve(shopAddress, tokenAmount);
+        const receipt = await tx.wait();
+        console.log(receipt);
+    }
     const shop = new Contract(shopAddress, ShopABI, signer);
-    await shop.listItem(game, item, isNFT, nftId, tokenAmount, chargeToken, price);
+    const tx = await shop.listItem(game, item, isNFT, nftId, tokenAmount, chargeToken, price);
+    const receipt = await tx.wait();
+    console.log(receipt);
 }
-export async function buyItem(game: number, listingId: number, contractAddress: string): Promise<void> {
+// and this 
+export async function buyItem(game: number, listingId: number, chargeToken: string, price: number, contractAddress: string): Promise<void> {
     if (!window.ethereum) return;
     const provider = new BrowserProvider(window.ethereum);
     const contract = new Contract(contractAddress, GameABI, provider);
     const shopAddress = await contract.shop();
     const signer = await provider.getSigner();
+    const tokenContract = new Contract(chargeToken, tokenABI, signer);
+    let tx = await tokenContract.approve(shopAddress, price);
+    await tx.wait();
     const shop = new Contract(shopAddress, ShopABI, signer);
-    await shop.buyItem(game, listingId);
+    tx = await shop.buyItem(game, listingId);
+    await tx.wait();
+}
+
+export async function splitGame(game: number, supply: number, name: string, symbol: string, contractAddress: string) {
+    if (!window.ethereum) return;
+    const provider = new BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const contract = new Contract(contractAddress, GameABI, signer);
+    const gameShopAddress = await contract.gameShop();
+    let tx = await contract.approve(gameShopAddress, game);
+    let receipt = await tx.wait();
+    console.log(receipt);
+    const gameShopContract = new Contract(gameShopAddress, GameShopABI, signer);
+    tx = await gameShopContract.split(game, supply, name, symbol);
+    receipt = await tx.wait();
+    console.log(receipt);
+}
+
+export async function listGame(isToken: boolean, amount: number, gameId: number, price: number, sellToken: string, contractAddress: string) {
+    if (!window.ethereum) return;
+    const provider = new BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const contract = new Contract(contractAddress, GameABI, signer);
+    const gameShopAddress = await contract.gameShop();
+    let tx = await contract.approve(gameShopAddress, gameId);
+    let receipt = await tx.wait();
+    console.log(receipt);
+    const gameShopContract = new Contract(gameShopAddress, GameShopABI, signer);
+    tx = await gameShopContract.list(isToken, amount, gameId, price, sellToken);
+    receipt = await tx.wait();
+    console.log(receipt);
+}
+export async function buyGame(id: number, price: number, sellToken: string, contractAddress: string) {
+    if (!window.ethereum) return;
+    const provider = new BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const contract = new Contract(contractAddress, GameABI, signer);
+    const token = new Contract(sellToken, tokenABI, signer);
+    const gameShopAddress = await contract.gameShop();
+    const gameShopContract = new Contract(gameShopAddress, GameShopABI, signer);
+    let tx = await token.approve(gameShopAddress, price);
+    let receipt = tx.wait();
+    console.log(receipt);
+    tx = await gameShopContract.buy(id);
+    receipt = await tx.wait();
+}
+export async function viewListedGames(contractAddress: string): Promise<any[]> {
+    if (!window.ethereum) return [];
+    const provider = new BrowserProvider(window.ethereum);
+    const contract = new Contract(contractAddress, GameABI, provider);
+    const gameShopAddress = await contract.gameShop();
+    const gameShopContract = new Contract(gameShopAddress, GameShopABI, provider);
+    const count = await gameShopContract.count();
+    const listings: any[] = [];
+    for (let i = 0; i < Number(count); i++) {
+        const listing = await gameShopContract.listings(i);
+        listings.push(listing);
+    }
+    return listings;
+}
+export async function redeem(game: number, tokenAddress: string, contractAddress: string) {
+    console.log({ tokenAddress });
+    if (!window.ethereum) return;
+    const provider = new BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const contract = new Contract(contractAddress, GameABI, signer);
+    const token = new Contract(tokenAddress, tokenABI, signer);
+    const gameShopAddress = await contract.gameShop();
+    const gameShopContract = new Contract(gameShopAddress, GameShopABI, signer);
+    console.log({ gameShopAddress });
+    let tx = await token.approve(gameShopAddress, 100000000);
+    let receipt = tx.wait();
+    console.log(receipt);
+    tx = await gameShopContract.redeem(game);
+    receipt = await tx.wait();
+    console.log(receipt);
+}
+export function chargeUser(amount: number, tokenAddress: string, ownerPkey: string, contractAddress: string) {
+
+}
+export function shorten(s: string): string {
+    return `${s.substring(0, 2)}...${s.substring(s.length - 2, s.length)}`;
 }

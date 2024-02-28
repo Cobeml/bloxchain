@@ -1,66 +1,48 @@
-import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
-import { Readable } from "stream";
+import AWS from 'aws-sdk';
 
-
-const s3Client = new S3Client({
-    region: "us-east-1", // Specify your bucket region
-    credentials: {
-        accessKeyId: process.env.NEXT_PUBLIC_ACCESS_KEY!, // Specify your access key ID
-        secretAccessKey: process.env.NEXT_PUBLIC_SECRET_ACCESS_KEY! // Specify your secret access key
-    }
+const s3 = new AWS.S3({
+    accessKeyId: "AKIAZB55MEJTS36KNS2U",
+    secretAccessKey: "Orgro/3D8TZT9Zwwxe54ri6y/S+zuYVo1OJw29KS",
+    region: "us-east-1"
 });
-const streamToString = (stream: Readable): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const chunks: Uint8Array[] = [];
-        stream.on("data", (chunk) => chunks.push(chunk));
-        stream.once("end", () => resolve(Buffer.concat(chunks).toString("utf-8")));
-        stream.once("error", reject);
-    });
-};
-const bucketName = "ai-crypto-app-6969696969";
-export function randomURL(): string {
-    const val: string = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
-    let result: string = "";
-    for (let i = 0; i < 20; i++) {
-        result += val[Math.floor(Math.random() * val.length)];
-    }
-    return result;
-}
 
-export async function uploadObject(code: string): Promise<string | void> {
-    const objectKey = randomURL(); // Generate a random key for the object
-    const command = new PutObjectCommand({
-        Bucket: bucketName,
-        Key: objectKey,
-        Body: code,
-    });
+const Bucket = "ai-crypto-app-6969696969";
 
-    try {
-        const response = await s3Client.send(command);
-        console.log("Successfully uploaded object", response);
-        return objectKey; // Return the key of the uploaded object
-    } catch (error) {
-        console.error("Error uploading object", error);
-        throw error;
-    }
-}
-export async function retrieveObject(objectKey: string): Promise<string | void> {
-    const command = new GetObjectCommand({
-        Bucket: bucketName,
-        Key: objectKey,
-    });
+export async function uploadFile(file: File): Promise<string | null> {
+    return new Promise<string | null>((resolve, reject) => {
+        // Generate file name
+        const fileName = `${Date.now()}-${file.name}`;
 
-    try {
-        const response = await s3Client.send(command);
-        if (response.Body) {
-            // Convert the stream to a string
-            const bodyContent = await streamToString(response.Body as Readable);
-            return bodyContent;
-        } else {
-            throw new Error("Empty body response");
-        }
-    } catch (error) {
-        console.error("Error retrieving object", error);
-        throw error;
-    }
+        // Read the file
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+
+        reader.onload = async function () {
+            const arrayBuffer = reader.result as ArrayBuffer;
+
+            // Prepare S3 upload parameters
+            const params = {
+                Bucket, // replace with your bucket name
+                Key: fileName,
+                Body: new Buffer(arrayBuffer),
+                ContentType: file.type,
+            };
+
+            try {
+                // Upload the file
+                const result = await s3.upload(params).promise();
+
+                // Return the URL of the uploaded file
+                resolve(result.Location);
+            } catch (error) {
+                console.error('Upload failed:', error);
+                reject(null);
+            }
+        };
+
+        reader.onerror = function () {
+            console.error('File read failed');
+            reject(null);
+        };
+    });
 }

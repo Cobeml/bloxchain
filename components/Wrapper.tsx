@@ -42,6 +42,9 @@ export default function Wrapper({ children }: { children: React.ReactNode; }) {
             <li className="hover:text-gray-300">
               <a href="/build">Build</a>
             </li>
+            <li className="hover:text-gray-300">
+              <a href="/game-shop">Game Shop</a>
+            </li>
           </ul>
         </nav>
         <div className="flex flex-row justify-center items-center gap-2">

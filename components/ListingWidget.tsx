@@ -8,7 +8,7 @@ export type ShopListingProps = {
         price: number;
         listingId: number;
     };
-    onBuy: (listingId: number) => void;
+    onBuy: () => void;
 };
 
 export function ListingWidget({ listing, onBuy }: ShopListingProps) {
@@ -22,7 +22,7 @@ export function ListingWidget({ listing, onBuy }: ShopListingProps) {
             <p className="text-gray-700">Listing ID: {listing.listingId}</p>
             <button
                 className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={() => onBuy(listing.listingId)}
+                onClick={onBuy}
             >
                 Buy Now
             </button>

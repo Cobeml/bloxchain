@@ -7,6 +7,7 @@ import { useMetaMask } from '@/components/hooks/useMetaMask';
 import { publishGame, saveGame, viewSavedGame, viewSavedGameNames } from '@/components/utils/utils';
 import Editor, { useMonaco } from '@monaco-editor/react';
 import { use, useEffect, useState } from 'react';
+import { uploadFile } from '@/components/utils/aws';
 
 // other ways to do this
 // host user html file in iframe
@@ -71,7 +72,9 @@ export default function Build() {
     const [loadingFiles, setLoadingFiles] = useState<boolean>(true);
     const [filenames, setFilenames] = useState<string[]>([]);
     const [selectedFilename, setSelectedFilename] = useState<string>("");
+    const [description, setDescription] = useState<string>("");
     const { wallet } = useMetaMask();
+    const [file, setFile] = useState<File | null>(null);
     // useEffect(() => {
     //     // console.log(signer, address);
     //     // if (signer && address && provider) {
@@ -196,7 +199,12 @@ export default function Build() {
         setFilenames(newFilenames);
     };
     const publish = async () => {
-        await publishGame(selectedFilename, editorCode, GameAddressLocalhost);
+        let imgSrc = "";
+        if (file) {
+            const url = await uploadFile(file);
+            if (url) imgSrc = url;
+        }
+        await publishGame(selectedFilename, editorCode, GameAddressLocalhost, description, imgSrc);
     };
     return (
         <div className="relative flex flex-row w-full h-screen">
@@ -216,7 +224,7 @@ export default function Build() {
                                             <input
                                                 placeholder={name}
                                                 key={i}
-                                                className={`bg-green-400 p-2 rounded-md w-full text-center hover:cursor-text hover:brightness-90 active:brightness-75`}
+                                                className={`bg-green-400 focus:outline-none p-2 rounded-md w-full text-center hover:cursor-text hover:brightness-90 active:brightness-75`}
                                                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => updateCurrentName(event, name)}
                                             />
                                         );
@@ -249,7 +257,6 @@ export default function Build() {
                 <div className="flex flex-row justify-center items-center gap-2">
                     <BasicButton onClick={saveAndTest} text="Test Locally" />
                     <BasicButton onClick={save} text="Save on Chain" />
-                    <BasicButton onClick={publish} text="Publish on Chain" />
                 </div>
                 <div className="flex flex-row justify-center items-center gap-2">
                     <BasicButton onClick={() => window.location.href = "/docs"} text="Docs" />
@@ -267,6 +274,18 @@ export default function Build() {
                 <p className="mt-2">
                     Press Ctrl+S to save temporarily
                 </p>
+                <div className="flex flex-col justify-center items-center gap-2">
+                    <textarea
+                        className="focus:outline-none bg-black resize-none"
+                        onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(event.target.value)}
+                    />
+                    <input
+                        type="file"
+                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => setFile(event.target.files ? event.target.files[0] : null)}
+                    />
+                    <BasicButton onClick={publish} text="Publish on Chain" />
+                </div>
             </div>
         </div>
     );
