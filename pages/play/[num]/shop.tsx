@@ -61,7 +61,7 @@ export default function Shop() {
             <div className="w-full flex-grow bg-gray-800 overflow-auto p-4 rounded-lg mx-6 mb-6">
                 <>
                     <div className="flex justify-between items-center mb-4">
-                        <p className="text-white">Games Shop</p>
+                        <p className="text-white">NFT Shop</p>
                         <input
                             type="text"
                             placeholder="Search Listings..."
