@@ -5,44 +5,36 @@ interface MagicOceanProps {
   text: string;
 }
 
-const MagicOcean: React.FC<MagicOceanProps> = ({ text }) => {
+const MagicOcean: React.FC<MagicOceanProps> = React.memo(({ text }) => {
+  // Use React.memo to prevent unnecessary re-renders
   const typing = useTypewriter(text);
   return <span>{typing}</span>;
-};
+});
 
 const Home = () => {
-  const [heading, setHeading] = React.useState("Welcome to Bloxchain");
-  // Initialize an array of texts to be typed out in sequence
-  const texts = [
+  const [heading] = React.useState("Welcome to Bloxchain"); // No setter needed if it's static
+  const texts = React.useMemo(() => [
     '\n',
-    'Bringing the Roblox Experience Onchain', // First text
-    '\n', // Intermediate state to simulate deletion
-    'Play, Build, Earn, Own, Enjoy' // Final text
-  ];
-  const [index, setIndex] = React.useState(0); // Current index in the texts array
-  const [magicName, setMagicName] = React.useState(texts[0]); // Initialize with the first text
+    'Bringing the Roblox Experience Onchain',
+    '\n',
+    'Play, Build, Earn, Own, Enjoy'
+  ], []); // useMemo to ensure the texts array doesn't get re-initialized on every render
+
+  const [index, setIndex] = React.useState(0);
+  const magicName = texts[index]; // Directly use texts[index] instead of a separate state
 
   React.useEffect(() => {
-    if (index < 3) {
-      if (index === 0) {
-        // Change to the next text after a delay
-        const timer = setTimeout(() => {
-          const nextIndex = (index + 1); // Loop back to the first text after the last one
-          setIndex(nextIndex); // Update the index
-          setMagicName(texts[nextIndex]); // Update the text to be typed out
-        }, 3000); // Delay of 3 seconds
-        return () => clearTimeout(timer);
-      } else {
-        // Change to the next text after a delay
-        const timer = setTimeout(() => {
-          const nextIndex = (index + 1); // Loop back to the first text after the last one
-          setIndex(nextIndex); // Update the index
-          setMagicName(texts[nextIndex]); // Update the text to be typed out
-        }, 5000); // Delay of 5 seconds
-        return () => clearTimeout(timer);
-      }
+    // Only proceed if index is within the bounds of the texts array
+    if (index < texts.length - 1) {
+      // Set a timeout to progress the text display
+      const timer = setTimeout(() => {
+        setIndex((currentIndex) => (currentIndex + 1) % texts.length); // Loop back after the last text
+      }, index === 0 ? 3000 : 5000); // Use 3000ms delay for the first text, 5000ms for others
+
+      // Clear the timeout on effect cleanup
+      return () => clearTimeout(timer);
     }
-  }, [magicName, index, texts]);
+  }, [index, texts.length]); // Dependency array includes only index and texts.length
 
   return (
     <div className="flex flex-col items-start justify-center h-screen p-10">
@@ -57,5 +49,3 @@ const Home = () => {
 };
 
 export default Home;
-
-
