@@ -31,7 +31,7 @@ export default function Wrapper({ children }: { children: React.ReactNode; }) {
     <div className="bg-gray-900 min-h-screen flex flex-col font-calm">
       <div className="min-h-screen animation-gradient-x bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-700">
         <div className="flex flex-row justify-between items-center">
-          <nav className="bg-gray-900 text-white shadow-lg rounded-lg py-3 w-full">
+          <nav className="bg-gray-900 text-white shadow-lg rounded-lg py-3 w-full h-9/10">
             <div className="max-w-6xl mx-auto px-4">
               <div className="flex justify-between">
                 <div className="flex space-x-7">

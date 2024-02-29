@@ -78,44 +78,62 @@ export default function Profile() {
         window.location.reload();
     };
     return (
-        <div className="flex flex-col justify-center items-center">
-            {
-                games.length === 0 ?
-                    <p>{`You don't own any games...`}</p>
-                    :
-                    <>
-                        <p>Games Owned</p>
-                        {games.map((game) => {
-                            return (
-                                <div key={game.num} className="flex flex-col justify-center items-center gap-2">
+        <div className="flex flex-col items-center justify-start h-screen p-4 w-screen" style={{ height: '90vh' }}>
+            {/* Games Owned Section */}
+            <div className="w-full h-1/2 bg-gray-800 overflow-auto p-4 rounded-lg mx-6">
+                <>
+                    <div className="flex justify-between items-center mb-4">
+                        <p className="text-white">Games Owned</p>
+                        <input
+                            type="text"
+                            placeholder="Search Games..."
+                            className="rounded-full border-2 border-gray-300 bg-white p-2"
+                        />
+                    </div>
+                    {games.length > 0 ? (
+                        <div className="flex flex-wrap justify-center gap-4">
+                            {games.map((game) => (
+                                <div key={game.num} className="flex flex-col items-center gap-2">
                                     <GameWidget {...game} />
-                                    <div className="flex flex-row justify-center items-center gap-2">
+                                    <div className="flex gap-2">
                                         <BasicButton onClick={() => split(game.num)} text="Split" />
                                         <BasicButton onClick={() => list(game.num)} text="List" />
                                     </div>
                                 </div>
-                            );
-
-                        })}
-                    </>
-            }
-            {gameTokens.length === 0 ?
-                <p>{`You don't own any game tokens...`}</p>
-                :
-                <>
-                    <p>Game Tokens Owned</p>
-                    {gameTokens.map((token) => {
-                        return (
-                            <div key={token.num} className="flex flex-col justify-center items-center gap-2">
-                                <GameTokenWidget key={token.num} {...token} />
-                                <div className="flex flex-row justify-center items-center gap-2">
-                                    {token.balance === token.supply && <BasicButton onClick={() => redeem(token.num, token.address, GameAddressLocalhost)} text="Redeem" />}
-                                </div>
-                            </div>
-                        );
-                    })}
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-white text-center">You don't own any games...</p>
+                    )}
                 </>
-            }
+            </div>
+            <br />
+            {/* Game Tokens Owned Section */}
+            <div className="w-full h-1/2 bg-gray-800 overflow-auto p-4 rounded-lg mx-6 mb-6">
+                <>
+                    <div className="flex justify-between items-center mb-4">
+                        <p className="text-white">Game Tokens Owned</p>
+                        <input
+                            type="text"
+                            placeholder="Search Tokens..."
+                            className="rounded-full border-2 border-gray-300 bg-white p-2"
+                        />
+                    </div>
+                    {gameTokens.length > 0 ? (
+                        <div className="flex flex-wrap justify-center gap-4">
+                            {gameTokens.map((token) => (
+                                <div key={token.num} className="flex flex-col items-center gap-2">
+                                    <GameTokenWidget {...token} />
+                                    {token.balance === token.supply && (
+                                        <BasicButton onClick={() => redeem(token.num, token.address, GameAddressLocalhost)} text="Redeem" />
+                                    )}
+                                </div>
+                            ))}
+                        </div>) : (
+                        <p className="text-white text-center">You don't own any game tokens...</p>
+                    )}
+                </>
+            </div>
             {showSplitModal && <SplitWidget onClose={close} submit={sendSplit} />}
             {showListModal && <ListWidget onClose={close} submit={sendList} />}
         </div>
