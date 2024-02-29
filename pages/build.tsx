@@ -1,5 +1,5 @@
 
-import BasicButton from '@/components/utils/BasicButton';
+import DevButton from '@/components/DevButton';
 import { GameABI, GameAddressLocalhost } from '@/components/utils/GameABI';
 import Loader from '@/components/Loader';
 import { ball, communication, count, post, setup } from '@/components/utils/examples';
@@ -8,7 +8,6 @@ import { publishGame, saveGame, viewSavedGame, viewSavedGameNames } from '@/comp
 import Editor, { useMonaco } from '@monaco-editor/react';
 import { use, useEffect, useState } from 'react';
 import { uploadFile } from '@/components/utils/aws';
-
 // other ways to do this
 // host user html file in iframe
 const defaultCode = `
@@ -23,12 +22,12 @@ const defaultCode = `
                 return {
                     nfts: [
                         /*
-                            {
-                                name: // collection name
-                                description: // collection description
-                                abbr: // token abbreviation
-                                data: // template of data you want stored on each nft ex. {health: 100, damage: 200}...
-                            }
+                        {
+                            name: // collection name
+                            description: // collection description
+                            abbr: // token abbreviation
+                            data: // template of data you want stored on each nft ex. {health: 100, damage: 200}...
+                        }
                         */
                     ],
                     tokens: [
@@ -75,6 +74,7 @@ export default function Build() {
     const [description, setDescription] = useState<string>("");
     const { wallet } = useMetaMask();
     const [file, setFile] = useState<File | null>(null);
+    const [viewMode, setViewMode] = useState('files');
     // useEffect(() => {
     //     // console.log(signer, address);
     //     // if (signer && address && provider) {
@@ -207,6 +207,60 @@ export default function Build() {
         await publishGame(selectedFilename, editorCode, GameAddressLocalhost, description, imgSrc);
     };
     return (
+        /* <div className="relative flex w-full h-screen">
+            <div className="w-1/6 bg-gray-800 text-white overflow-auto">
+                {
+                    viewMode === "files" ? (
+                        <>
+                            <h2 className="text-lg font-semibold p-4">Files</h2>
+                            {loadingFiles ?
+                                <Loader height="h-16" width="w-16" />
+                                :
+                                <div className="flex flex-col p-4 gap-2">
+                                    {filenames.length === 0 ?
+                                        <p>No files found</p>
+                                        :
+                                        filenames.map((name: string, i: number) => {
+                                            return (
+                                                <div key={i} onClick={() => loadFileData(name)} className={`cursor-pointer p-2 rounded-md hover:bg-gray-700`}>
+                                                    {name}
+                                                </div>
+                                            );
+                                        })
+                                    }
+                                </div>
+                            }
+                            <DevButton onClick={() => setViewMode("actions")} text="Actions" />
+                        </>
+                    ) : (
+                        <>
+                            <h2 className="text-lg font-semibold p-4">Actions</h2>
+                            <div className="flex flex-col p-4 gap-2">
+                                <DevButton onClick={saveAndTest} text="Test Locally" />
+                                <DevButton onClick={save} text="Save on Chain" />
+                                <DevButton onClick={() => window.location.href = "/docs"} text="Docs" />
+                                <DevButton onClick={publish} text="Publish on Chain" />
+                            </div>
+                            <DevButton onClick={() => setViewMode("files")} text="Files" />
+                        </>
+                    )
+                }
+            </div>
+
+            /* Code Editor */
+        /*
+        <div className="flex-grow">
+            <Editor
+                height="100%"
+                defaultLanguage="html"
+                defaultValue={defaultCode}
+                value={editorCode}
+                theme="vs-dark"
+                onChange={updateCode}
+            />
+        </div>
+    </div> */
+
         <div className="relative flex flex-row w-full h-screen">
             <div className="w-1/6 bg-gray-700 p-4 text-white overflow-auto">
                 <h2 className="text-lg font-semibold">Files</h2>
@@ -236,39 +290,29 @@ export default function Build() {
                                         );
                                     }
                                 })}
-                                <BasicButton onClick={newProject} text="Create new project" />
+                                <DevButton onClick={newProject} text="Create new project" />
                             </>
                         }
                     </div>
                 }
             </div>
-            <div className="flex-grow">
-                <Editor
-                    height="100%"
-                    defaultLanguage="html"
-                    defaultValue={defaultCode}
-                    value={editorCode}
-                    theme="vs-dark"
-                    onChange={updateCode}
-                />
-            </div>
             <div className="w-1/4 bg-gray-700 p-4 text-white overflow-auto text-center flex flex-col gap-2">
                 <h2 className="text-lg font-semibold">Info</h2>
                 <div className="flex flex-row justify-center items-center gap-2">
-                    <BasicButton onClick={saveAndTest} text="Test Locally" />
-                    <BasicButton onClick={save} text="Save on Chain" />
+                    <DevButton onClick={saveAndTest} text="Test Locally" />
+                    <DevButton onClick={save} text="Save on Chain" />
                 </div>
                 <div className="flex flex-row justify-center items-center gap-2">
-                    <BasicButton onClick={() => window.location.href = "/docs"} text="Docs" />
+                    <DevButton onClick={() => window.location.href = "/docs"} text="Docs" />
                 </div>
                 <div className="flex flex-col justify-center items-center w-full gap-2">
                     <p>Load Examples</p>
                     <div className="flex flex-row justify-center items-center gap-2">
-                        <BasicButton onClick={() => loadExample(1)} text="1" />
-                        <BasicButton onClick={() => loadExample(2)} text="2" />
-                        <BasicButton onClick={() => loadExample(3)} text="3" />
-                        <BasicButton onClick={() => loadExample(4)} text="4" />
-                        <BasicButton onClick={() => loadExample(5)} text="5" />
+                        <DevButton onClick={() => loadExample(1)} text="1" />
+                        <DevButton onClick={() => loadExample(2)} text="2" />
+                        <DevButton onClick={() => loadExample(3)} text="3" />
+                        <DevButton onClick={() => loadExample(4)} text="4" />
+                        <DevButton onClick={() => loadExample(5)} text="5" />
                     </div>
                 </div>
                 <p className="mt-2">
@@ -284,8 +328,18 @@ export default function Build() {
                         className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => setFile(event.target.files ? event.target.files[0] : null)}
                     />
-                    <BasicButton onClick={publish} text="Publish on Chain" />
+                    <DevButton onClick={publish} text="Publish on Chain" />
                 </div>
+            </div>
+            <div className="flex-grow">
+                <Editor
+                    height="100%"
+                    defaultLanguage="html"
+                    defaultValue={defaultCode}
+                    value={editorCode}
+                    theme="vs-dark"
+                    onChange={updateCode}
+                />
             </div>
         </div>
     );
