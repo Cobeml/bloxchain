@@ -58,21 +58,37 @@ export default function Shop() {
     };
     return (
         <div className="flex flex-col justify-center items-center gap-2">
-            <div className="flex flex-row justify-center items-center gap-2">
-                <p>Game Shop</p>
-                {userListable &&
-                    <BasicButton onClick={() => setShowListing(true)} text="List an Item" />
-                }
+            <div className="w-full flex-grow bg-gray-800 overflow-auto p-4 rounded-lg mx-6 mb-6">
+                <>
+                    <div className="flex justify-between items-center mb-4">
+                        <p className="text-white">Games Shop</p>
+                        <input
+                            type="text"
+                            placeholder="Search Listings..."
+                            className="rounded-full border-2 border-gray-300 bg-white p-2"
+                        />
+                    </div>
+                    <div className="flex flex-row justify-center items-center w-full">
+                        {listings.length == 0 ?
+                            <div className="text-white"> No NFT listings for sale for this game</div>
+                            :
+                            <div className="grid grid-cols-4 place-items-center items-center gap-4">
+                                {listings.map((listing: ShopListing) => (
+                                    <ListingWidget
+                                        key={listing.listingId}
+                                        listing={listing}
+                                        onBuy={() => buy(listing.listingId, listing.chargeToken, listing.price)}
+                                    />
+                                ))}
+                            </div>
+                        }
+                    </div>
+                </>
             </div>
-            <div className="grid grid-cols-4">
-                {listings.map((listing: ShopListing) => (
-                    <ListingWidget
-                        key={listing.listingId}
-                        listing={listing}
-                        onBuy={() => buy(listing.listingId, listing.chargeToken, listing.price)}
-                    />
-                ))}
-            </div>
+            <p>List your NFTs for Sale</p>
+            {userListable &&
+                <BasicButton onClick={() => setShowListing(true)} text="List an Item" />
+            }
             {showListing &&
                 <div className="absolute w-auto h-auto bg-gray-400 p-4 rounded-lg flex flex-col justify-center items-center gap-2" style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
                     <ListItemWidget list={list} tokenAddresses={tokenAddresses} nftAddresses={nftAddresses} />

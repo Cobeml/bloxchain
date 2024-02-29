@@ -37,7 +37,7 @@ const Home = () => {
   }, [index, texts.length]); // Dependency array includes only index and texts.length
 
   return (
-    <div className="flex flex-col items-start justify-center h-screen p-10">
+    <div className="flex flex-col items-start justify-center h-screen p-10" style={{ height: '90vh' }}>
       <h1 className="text-8xl font-bold text-indigo-400">
         <MagicOcean text={heading} />
       </h1>

@@ -44,7 +44,7 @@ export default function Wrapper({ children }: { children: React.ReactNode; }) {
                   </div> */}
                   <div className="hidden md:flex items-center space-x-6">
                     <a className={`py-4 px-2 hover:text-white transition duration-300 ${router.pathname === '/' ? 'text-pink-700' : 'text-gray-300'}`} href="/">Home</a>
-                    <a className={`py-4 px-2 hover:text-white transition duration-300 ${router.pathname === '/profile' ? 'text-pink-700' : 'text-gray-300'}`} href="/profile">Profile</a>
+                    <a className={`py-4 px-2 hover:text-white transition duration-300 ${router.pathname === '/profile' ? 'text-pink-700' : 'text-gray-300'}`} href="/profile">Your Assets</a>
                     <a className={`py-4 px-2 hover:text-white transition duration-300 ${router.pathname === '/play' ? 'text-pink-700' : 'text-gray-300'}`} href="/play">Play</a>
                     <a className={`py-4 px-2 hover:text-white transition duration-300 ${router.pathname === '/build' ? 'text-pink-700' : 'text-gray-300'}`} href="/build">Build</a>
                     <a className={`py-4 px-2 hover:text-white transition duration-300 ${router.pathname === '/game-shop' ? 'text-pink-700' : 'text-gray-300'}`} href="/game-shop">Game Shop</a>
