@@ -1,5 +1,6 @@
 
 import DevButton from '@/components/DevButton';
+import ToggleDivs from '@/components/ToggleDivs';
 import { GameABI, GameAddressLocalhost } from '@/components/utils/GameABI';
 import Loader from '@/components/Loader';
 import { ball, communication, count, post, setup } from '@/components/utils/examples';
@@ -260,86 +261,127 @@ export default function Build() {
             />
         </div>
     </div> */
-
-        <div className="relative flex flex-row w-full h-screen">
-            <div className="w-1/6 bg-gray-700 p-4 text-white overflow-auto">
-                <h2 className="text-lg font-semibold">Files</h2>
-                {loadingFiles ?
-                    <Loader height="h-16" width="w-16" />
-                    :
-                    <div className="flex flex-col justify-center items-center gap-2">
-                        {filenames.length === 0 ?
-                            <p>No files found</p>
+        <div className="relative flex flex-row w-full h-full h-screen">
+            <ToggleDivs
+                buttonText1="Projects"
+                buttonText2="Info"
+                buttonText3="Actions"
+                divContent1={
+                    <div className="flex flex-col justify-between h-full p-4">
+                        {loadingFiles ?
+                            <Loader height="h-16" width="w-16" />
                             :
-                            <>
-                                {filenames.map((name: string, i: number) => {
-                                    if (name == selectedFilename) {
-                                        return (
-                                            <input
-                                                placeholder={name}
-                                                key={i}
-                                                className={`bg-green-400 focus:outline-none p-2 rounded-md w-full text-center hover:cursor-text hover:brightness-90 active:brightness-75`}
-                                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => updateCurrentName(event, name)}
-                                            />
-                                        );
-                                    } else {
-                                        return (
-                                            <div key={i} onClick={() => loadFileData(name)} className={`bg-gray-400 p-2 rounded-md w-full text-center hover:cursor-pointer hover:brightness-90 active:brightness-75`}>
-                                                {name}
-                                            </div>
-                                        );
-                                    }
-                                })}
-                                <DevButton onClick={newProject} text="Create new project" />
-                            </>
+                            <div className="flex flex-col justify-center items-center gap-2">
+                                {filenames.length === 0 ?
+                                    <p>No files found</p>
+                                    :
+                                    <>
+                                        {filenames.map((name: string, i: number) => {
+                                            if (name == selectedFilename) {
+                                                return (
+                                                    <input
+                                                        placeholder={name}
+                                                        key={i}
+                                                        className={`bg-indigo-700 focus:outline-none p-2 rounded-md w-full text-center hover:cursor-text hover:brightness-90 active:brightness-75`}
+                                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => updateCurrentName(event, name)}
+                                                    />
+                                                );
+                                            } else {
+                                                return (
+                                                    <div key={i} onClick={() => loadFileData(name)} className={`bg-gray-400 p-2 rounded-md w-full text-center hover:cursor-pointer hover:brightness-90 active:brightness-75`}>
+                                                        {name}
+                                                    </div>
+                                                );
+                                            }
+                                        })}
+                                        <DevButton onClick={newProject} text="Create new project" />
+                                    </>
+                                }
+                            </div>
                         }
                     </div>
                 }
-            </div>
-            <div className="w-1/4 bg-gray-700 p-4 text-white overflow-auto text-center flex flex-col gap-2">
-                <h2 className="text-lg font-semibold">Info</h2>
-                <div className="flex flex-row justify-center items-center gap-2">
-                    <DevButton onClick={saveAndTest} text="Test Locally" />
-                    <DevButton onClick={save} text="Save on Chain" />
-                </div>
-                <div className="flex flex-row justify-center items-center gap-2">
-                    <DevButton onClick={() => window.location.href = "/docs"} text="Docs" />
-                </div>
-                <div className="flex flex-col justify-center items-center w-full gap-2">
-                    <p>Load Examples</p>
-                    <div className="flex flex-row justify-center items-center gap-2">
-                        <DevButton onClick={() => loadExample(1)} text="1" />
-                        <DevButton onClick={() => loadExample(2)} text="2" />
-                        <DevButton onClick={() => loadExample(3)} text="3" />
-                        <DevButton onClick={() => loadExample(4)} text="4" />
-                        <DevButton onClick={() => loadExample(5)} text="5" />
+                divContent2={
+                    <div className="flex flex-col justify-between h-full p-4">
+                        <div className="flex flex-col items-center">
+                            <div className="flex flex-col items-center gap-4">
+                                <div className="flex flex-row gap-4 mb-2">
+                                    <DevButton onClick={() => window.location.href = "/docs"} text="Docs" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col items-center w-full gap-4">
+                            <p className="text-center">Load Examples</p>
+                            <div className="flex flex-row gap-4">
+                                <DevButton onClick={() => loadExample(1)} text="1" />
+                                <DevButton onClick={() => loadExample(2)} text="2" />
+                                <DevButton onClick={() => loadExample(3)} text="3" />
+                            </div>
+                            <div className="flex flex-row gap-4 mb-4">
+                                <DevButton onClick={() => loadExample(4)} text="4" />
+                                <DevButton onClick={() => loadExample(5)} text="5" />
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <p className="mt-2">
-                    Press Ctrl+S to save temporarily
-                </p>
-                <div className="flex flex-col justify-center items-center gap-2">
-                    <textarea
-                        className="focus:outline-none bg-black resize-none"
-                        onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(event.target.value)}
+                }
+                divContent3={
+                    <div className="flex flex-col justify-between h-full p-4">
+                        <div className="flex flex-col items-center gap-4 mb-5">
+                            <DevButton onClick={saveAndTest} text="Test Locally" />
+                            <DevButton onClick={save} text="Save on Chain" />
+                            <DevButton onClick={publish} text="Publish on Chain" />
+                        </div>
+
+                        <p className="text-center mb-4">
+                            Press Ctrl+S to save temporarily
+                        </p>
+
+                        <div className="flex flex-col items-center gap-4 mb-5">
+                            <textarea
+                                className="w-full p-2 text-white bg-gray-900 rounded-md focus:outline-none resize-none"
+                                placeholder="Enter description..."
+                                onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(event.target.value)}
+                            />
+                            <input
+                                type="file"
+                                className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
+                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setFile(event.target.files ? event.target.files[0] : null)}
+                            />
+                        </div>
+                    </div>
+                }
+            />
+            <div className="flex flex-col w-5/6 flex-grow">
+                <div className="flex flex-col flex-1 overflow-auto">
+                    <Editor
+                        height="100%"
+                        defaultLanguage="html"
+                        defaultValue={defaultCode}
+                        value={editorCode}
+                        theme="vs-dark"
+                        onChange={updateCode}
                     />
-                    <input
-                        type="file"
-                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => setFile(event.target.files ? event.target.files[0] : null)}
-                    />
-                    <DevButton onClick={publish} text="Publish on Chain" />
                 </div>
-            </div>
-            <div className="flex-grow">
-                <Editor
-                    height="100%"
-                    defaultLanguage="html"
-                    defaultValue={defaultCode}
-                    value={editorCode}
-                    theme="vs-dark"
-                    onChange={updateCode}
-                />
+
+                <div className="flex justify-end space-x-2 p-1 bg-gray-800 fixed bottom-0 right-0 ml-auto rounded-tl-lg">
+                    <DevButton
+                        className="text-xs py-1 px-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-pink-500 hover:to-purple-500 text-white font-bold rounded"
+                        onClick={saveAndTest}
+                        text="Test Locally"
+                    />
+                    <DevButton
+                        className="text-xs py-1 px-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-pink-500 hover:to-purple-500 text-white font-bold rounded"
+                        onClick={save}
+                        text="Save on Chain"
+                    />
+                    <DevButton
+                        className="text-xs py-1 px-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-pink-500 hover:to-purple-500 text-white font-bold rounded"
+                        onClick={publish}
+                        text="Publish on Chain"
+                    />
+
+                </div>
             </div>
         </div>
     );
