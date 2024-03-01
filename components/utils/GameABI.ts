@@ -1,6 +1,6 @@
 
 export const GameAddressLocalhost = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-export const GamePkeyLocalhost = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
+export const GamePkeyLocalhost = '1013bc81f42776bc452b302702fff266d168af17fb2fa8afcc9d78e4d19b82b3';
 export const tokenABI = [
     "function balanceOf(address) view returns (uint256)",
     "function name() view returns (string)",

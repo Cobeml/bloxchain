@@ -21,7 +21,6 @@ export default function SwitchNetworkWidget() {
 
     return (
         <select value={selectedNetwork} onChange={handleNetworkChange} className="text-black">
-            <option value="Localhost">Localhost</option>
             {Object.entries(config).map(([chainId, { name }]) => (
                 <option key={chainId} value={chainId}>{name}</option>
             ))}
