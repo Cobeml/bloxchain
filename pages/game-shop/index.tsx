@@ -1,13 +1,14 @@
 import GameListingWidget, { GameListingWidgetProps } from "@/components/GameListingWidget";
-import { GameAddressLocalhost } from "@/components/utils/GameABI";
+import { useSwitchNetwork } from "@/components/hooks/useSwitchNetwork";
 import { buyGame, getGame, viewListedGames } from "@/components/utils/utils";
 import { useEffect, useState } from "react";
 
 
 export default function GameShop() {
     const [listings, setListings] = useState<GameListingWidgetProps[]>([]);
+    const { contractAddress, privKey } = useSwitchNetwork();
     useEffect(() => {
-        viewListedGames(GameAddressLocalhost).then((listings) => {
+        viewListedGames(contractAddress).then((listings) => {
             setup(listings);
         });
     }, []);
@@ -22,7 +23,7 @@ export default function GameShop() {
             const tokenAddress = listing[5];
             const sellToken = listing[6];
             const seller = listing[7];
-            const gameData = await getGame(gameId, GameAddressLocalhost);
+            const gameData = await getGame(gameId, contractAddress);
             const l: GameListingWidgetProps = {
                 id,
                 isToken,
@@ -41,7 +42,7 @@ export default function GameShop() {
         setListings(ls);
     };
     const buy = async (id: number, price: number, sellToken: string) => {
-        await buyGame(id, price, sellToken, GameAddressLocalhost);
+        await buyGame(id, price, sellToken, contractAddress);
     };
     return (
         <div className="flex flex-col items-center justify-start h-screen p-4 w-screen" style={{ height: '90vh' }}>

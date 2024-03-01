@@ -52,11 +52,14 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
             accounts = providedAccounts || await window.ethereum?.request(
                 { method: 'eth_accounts' },
             );
-        } catch (err) { }
+        } catch (err) {
 
-        if (accounts.length === 0) {
+        }
+
+        if (!accounts || accounts.length === 0) {
             // If there are no accounts, then the user is disconnected
             setWallet(disconnectedState);
+            console.error("returned");
             return;
         }
 
@@ -120,7 +123,7 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
             communicationServerUrl: 'https://metamask-sdk-socket.metafi.codefi.network/',
             checkInstallationImmediately: false,
             dappMetadata: {
-                name: 'NFT Tickets',
+                name: 'Blox',
                 url: window.location.host,
             },
             logging: {

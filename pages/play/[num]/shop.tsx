@@ -1,8 +1,8 @@
 import { ListItemWidget, ShopListingFormValues } from "@/components/ListItemWidget";
 import { ListingWidget } from "@/components/ListingWidget";
 import { useMetaMask } from "@/components/hooks/useMetaMask";
+import { useSwitchNetwork } from "@/components/hooks/useSwitchNetwork";
 import BasicButton from "@/components/utils/BasicButton";
-import { GameAddressLocalhost, GamePkeyLocalhost } from "@/components/utils/GameABI";
 import { ShopListing, buyItem, getGameTokenNFTAddresses, listItem, listItemOwner, viewShop } from "@/components/utils/utils";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -18,10 +18,11 @@ export default function Shop() {
     const [owner, setOwner] = useState<string>("");
     const [nftAddresses, setNftAddresses] = useState<string[]>([]);
     const [tokenAddresses, setTokenAddresses] = useState<string[]>([]);
+    const { contractAddress, privKey } = useSwitchNetwork();
     useEffect(() => {
         if (router && router.isReady && wallet && wallet.accounts.length > 0) {
             const num = Number(router.query.num);
-            viewShop(num, GameAddressLocalhost).then((result: any) => {
+            viewShop(num, contractAddress).then((result: any) => {
                 setListings(result.listings);
                 // allow the user to list if userListable is true or if they are the owner;
                 setUserListable(result.userListable || result.owner.toLowerCase() === wallet.accounts[0].toLowerCase());
@@ -32,14 +33,14 @@ export default function Shop() {
         }
     }, [wallet, router, router.isReady]);
     const getAddresses = async (num: number) => {
-        const { tokens, nfts } = await getGameTokenNFTAddresses(num, GameAddressLocalhost);
+        const { tokens, nfts } = await getGameTokenNFTAddresses(num, contractAddress);
         console.log({ tokens, nfts });
         setTokenAddresses(tokens);
         setNftAddresses(nfts);
     };
     const buy = async (listingId: number, chargeToken: string, price: number) => {
         try {
-            await buyItem(gameNum, listingId, chargeToken, price, GameAddressLocalhost);
+            await buyItem(gameNum, listingId, chargeToken, price, contractAddress);
             setListings((listings => listings.filter((listing: ShopListing) => listing.listingId !== listingId)));
         } catch (e) {
             console.error(e);
@@ -50,7 +51,7 @@ export default function Shop() {
         try {
             await f(
                 gameNum, values.item, values.isNFT, values.nftId, values.tokenAmount,
-                values.chargeToken, values.price, GameAddressLocalhost, GamePkeyLocalhost
+                values.chargeToken, values.price, contractAddress, privKey
             );
         } catch (e) {
             console.error(e);

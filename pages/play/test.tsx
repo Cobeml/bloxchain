@@ -3,8 +3,10 @@ import NFTWidget from "@/components/NFTWidget";
 import TokenWidget from "@/components/TokenWidget";
 import UserWidget from "@/components/UserWidget";
 import { NFT, NFTInternal, Token, TokenInternal, User } from "@/components/utils/crypto";
-import { sauce, saucify, sizer } from "@/components/utils/scripts";
+import { saucify } from "@/components/utils/scripts";
 import { useEffect, useState } from "react";
+import { useMetaMask } from "@/components/hooks/useMetaMask";
+import { generateRandomAddress, signMessage } from "@/components/utils/utils";
 // for game, creators can only debit their own tokens in the game
 // any other tokens debited count as a charge and are distributed amongst the owners of the game
 export default function PlayTest() {
@@ -16,6 +18,14 @@ export default function PlayTest() {
     const [editWindowNFT, setEditWindowNFT] = useState<boolean>(false);
     const [editWindowToken, setEditWindowToken] = useState<boolean>(false);
     const [dataToEdit, setDataToEdit] = useState<{ [key: string]: any; }>({});
+    const { wallet } = useMetaMask();
+    useEffect(() => {
+        window.addEventListener("message", handleFrameMessage);
+        return () => {
+            // clean up
+            window.removeEventListener("message", handleFrameMessage);
+        };
+    }, [user, tokens, nfts]);
     useEffect(() => {
         let code = sessionStorage.getItem("code");
         if (!code) {
@@ -43,13 +53,14 @@ export default function PlayTest() {
                 for (const nft of result.nfts) {
                     nfts.nfts.set(nft.name, []);
                     nfts.data.set(nft.name, nft.data);
+                    nfts.addresses.set(nft.name, generateRandomAddress());
                 }
                 const tokens = new Token(0, "", false);
                 for (const token of result.tokens) {
-                    const t = new TokenInternal("", 1000, token.name, token.description, token.abbr);
+                    const t = new TokenInternal("", 0, token.name, token.description, token.abbr);
                     tokens.tokens.set(token.name, t);
                 }
-                const user = new User();
+                const user = new User("0x00000000000000");
                 user.data = result.user;
                 console.log({ user, tokens, nfts, result });
                 setUser(user);
@@ -57,14 +68,8 @@ export default function PlayTest() {
                 setNfts(nfts);
             }
             code = saucify(code);
-            console.log(code);
             setCode(code || "");
         }
-        window.addEventListener("message", handleFrameMessage);
-        return () => {
-            // clean up
-            window.removeEventListener("message", handleFrameMessage);
-        };
     }, []);
     useEffect(() => {
         // here I want to pass the data into the iframe
@@ -89,8 +94,8 @@ export default function PlayTest() {
             };
             iframe.contentWindow?.postMessage(message);
         }
-    }, [nfts, tokens, user]);
-    const handleFrameMessage = (event: any) => {
+    }, [nfts, tokens, user, wallet]);
+    const handleFrameMessage = async (event: any) => {
         const { type } = event.data;
         switch (type) {
             case "__size": {
@@ -111,6 +116,7 @@ export default function PlayTest() {
                             exists: Boolean(nfts),
                             nfts: Array.from(nfts?.nfts || new Map()),
                             data: Array.from(nfts?.data || new Map()),
+                            addresses: Array.from(nfts?.addresses || new Map()),
                         },
                         tokens: {
                             exists: Boolean(nfts),
@@ -118,40 +124,187 @@ export default function PlayTest() {
                         },
                         user: {
                             exists: Boolean(user),
-                            data: user?.data
+                            data: user?.data,
+                            address: user?.address,
                         }
                     };
                     iframe.contentWindow?.postMessage(message);
                 }
                 break;
             }
-        }
-    };
-    const loadIntoGame = () => {
-        const iframe = document.getElementById("game") as HTMLIFrameElement;
-        if (iframe) {
-            const message = {
-                __type: "data",
-                __real: false,
-                nfts: {
-                    exists: Boolean(nfts),
-                    nfts: Array.from(nfts?.nfts || new Map()),
-                    data: Array.from(nfts?.data || new Map()),
-                },
-                tokens: {
-                    exists: Boolean(nfts),
-                    tokens: Array.from(tokens?.tokens || new Map()),
-                },
-                user: {
-                    exists: Boolean(user),
-                    data: user?.data
+            case "__tokenToUser": {
+                const { args, key }: { args: { tokenAddress: string, amount: number; }, key: string; } = event.data;
+                let status: boolean = false;
+                try {
+                    if (!tokens) throw new Error("Tokens is undefined");
+                    for (const [_, internal] of Array.from(tokens.tokens)) {
+                        if (internal.address == args.tokenAddress) {
+                            internal.amount += args.amount;
+                            status = true;
+                            break;
+                        }
+                    }
+                } catch (e) {
+                    console.error(e);
+                    status = false;
+                } finally {
+                    const iframe = document.getElementById("game")! as HTMLIFrameElement;
+                    iframe.contentWindow?.postMessage({ data: { key, success: status } });
                 }
-            };
-            iframe.contentWindow?.postMessage(message);
+                break;
+            }
+            case "__tokenFromUser": {
+                const { args, key }: { args: { tokenAddress: string, amount: number; }, key: string; } = event.data;
+                let status: boolean = false;
+                try {
+                    if (!tokens) throw new Error("Tokens is undefined");
+                    for (const [_, internal] of Array.from(tokens.tokens)) {
+                        if (internal.address == args.tokenAddress) {
+                            const s = await signMessage(`Simulate taking ${args.amount} tokens`, wallet.accounts[0]);
+                            if (!s) break;
+                            if (internal.amount - args.amount < 0) {
+                                throw new Error(`Not enough ${args.tokenAddress} token`);
+                            }
+                            internal.amount -= args.amount;
+                            status = true;
+                            break;
+                        }
+                    }
+                } catch (e) {
+                    console.error(e);
+                    status = false;
+                } finally {
+                    const iframe = document.getElementById("game")! as HTMLIFrameElement;
+                    iframe.contentWindow?.postMessage({ data: { key, success: status } });
+                }
+                break;
+            }
+            case "__mintNFT": {
+                const { args, key }: { args: { nftAddress: string; }, key: string; } = event.data;
+                let status: boolean = false;
+                try {
+                    if (!nfts) throw new Error("nfts is undefined");
+                    for (const [name, address] of Array.from(nfts.addresses)) {
+                        if (address === args.nftAddress) {
+                            const defaultData = nfts.data.get(name)!;
+                            const newNFT = new NFTInternal(Math.floor(Math.random() * 10000), address, defaultData);
+                            nfts.nfts.get(name)!.push(newNFT);
+                            status = true;
+                            break;
+                        }
+                    }
+                } catch (e) {
+                    console.error(e);
+                    status = false;
+                } finally {
+                    const iframe = document.getElementById("game")! as HTMLIFrameElement;
+                    iframe.contentWindow?.postMessage({ data: { key, success: status } });
+                }
+                break;
+            }
+            case "__takeNFT": {
+                const { args, key }: { args: { id: number; nftAddress: string; }, key: string; } = event.data;
+                let status: boolean = false;
+                try {
+                    if (!nfts) throw new Error("nfts is undefined");
+                    await signMessage(`Simulate transfer of nft ${args.id} from ${args.nftAddress}`, wallet.accounts[0]);
+                    for (const [name, address] of Array.from(nfts.addresses)) {
+                        if (address === args.nftAddress) {
+                            const nft_list = nfts.nfts.get(name)!;
+                            for (let i = 0; i < nft_list.length; i++) {
+                                if (nft_list[i].id === args.id) {
+                                    nft_list.splice(i, 1);
+                                    status = true;
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                } catch (e) {
+                    console.error(e);
+                    status = false;
+                } finally {
+                    const iframe = document.getElementById("game")! as HTMLIFrameElement;
+                    iframe.contentWindow?.postMessage({ data: { key, success: status } });
+                }
+                break;
+            }
+            case "__updateUserStats": {
+                const { args, key }: { args: { keys: string[], values: number[]; }, key: string; } = event.data;
+                let status: boolean = false;
+                try {
+                    if (!user) throw new Error("user is undefined");
+                    for (let i = 0; i < args.keys.length; i++) {
+                        user.data[args.keys[i]] = args.values[i];
+                    }
+                    status = true;
+                } catch (e) {
+                    console.error(e);
+                    status = false;
+                } finally {
+                    const iframe = document.getElementById("game")! as HTMLIFrameElement;
+                    iframe.contentWindow?.postMessage({ data: { key, success: status } });
+                }
+                break;
+            }
+            case "__updateUserNFT": {
+                const { args, key }: { args: { id: number, nftAddress: string, keys: string[], values: number[]; }, key: string; } = event.data;
+                let status: boolean = false;
+                try {
+                    if (!nfts) throw new Error("nfts is undefined");
+                    for (const [name, address] of Array.from(nfts.addresses)) {
+                        if (address === args.nftAddress) {
+                            const nft_list = nfts.nfts.get(name)!;
+                            for (let i = 0; i < nft_list.length; i++) {
+                                if (nft_list[i].id === args.id) {
+                                    for (let i = 0; i < args.keys.length; i++) {
+                                        nft_list[i].data[args.keys[i]] = args.values[i];
+                                    }
+                                    status = true;
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    status = true;
+                } catch (e) {
+                    console.error(e);
+                    status = false;
+                } finally {
+                    const iframe = document.getElementById("game")! as HTMLIFrameElement;
+                    iframe.contentWindow?.postMessage({ data: { key, success: status } });
+                }
+                break;
+            }
+            case "__updateLeaderboard": {
+                const { args, key } = event.data;
+                console.log("No leaderboard in testing mode...");
+                const iframe = document.getElementById("game")! as HTMLIFrameElement;
+                iframe.contentWindow?.postMessage({ data: { key, success: true } });
+                break;
+            }
+            case "__chargeUser": {
+                const { args, key }: { args: { tokenAddress: string, amount: number; }, key: string; } = event.data;
+                let status: boolean = false;
+                try {
+                    await signMessage(`Simulating charging user ${args.amount} of ${args.tokenAddress}`, wallet.accounts[0]);
+                    status = true;
+                } catch (e) {
+                    console.error(e);
+                    status = false;
+                } finally {
+                    const iframe = document.getElementById("game")! as HTMLIFrameElement;
+                    iframe.contentWindow?.postMessage({ data: { key, success: true } });
+                }
+                break;
+            }
+            default: {
+                // console.error(`Invalid type: ${type}`);
+                break;
+            }
         }
-    };
-    const requestTransaction = () => {
-
     };
     const showEditWindowUser = (data: { [key: string]: number; }) => {
         setDataToEdit(data);
@@ -163,7 +316,7 @@ export default function PlayTest() {
     };
     const confirmDataEditUser = (key: string, value: number) => {
         if (user) {
-            const u = new User();
+            const u = new User("0x000000000");
             u.data = user.data;
             u.data[key] = value;
             setUser(u);
@@ -205,17 +358,14 @@ export default function PlayTest() {
     };
     return (
         <>
-            <div className="w-auto h-auto bg-blue-600" style={{ height: "inherit" }}>
+            <div className="w-auto h-auto" style={{ height: "inherit" }}>
                 <iframe id="game" srcDoc={code} frameBorder={0}></iframe>
             </div>
             <div className="absolute bottom-0 left-0 w-full flex flex-row justify-between">
                 {nfts && <NFTWidget nfts={nfts} real={false} showEditWindow={showEditWindowNFT} />}
                 {user && <UserWidget user={user} real={false} showEditWindow={showEditWindowUser} />}
-                <BasicButton onClick={loadIntoGame} text="Load Assets" />
+                {/* <BasicButton onClick={loadIntoGame} text="Load Assets" /> */}
                 {tokens && <TokenWidget tokens={tokens} real={false} showEditWindow={showEditWindowToken} />}
-            </div>
-            <div className="absolute">
-                {/* show leaderboard here, show player nfts, show player tokens, show player data */}
             </div>
             {editWindowUser &&
                 <div className="absolute flex flex-col justify-center items-center p-4 rounded-lg bg-white border border-black" style={{ top: '50%', left: '50%', transform: "translate(-50%, -50%)" }}>

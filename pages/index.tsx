@@ -5,6 +5,7 @@ interface MagicOceanProps {
   text: string;
 }
 
+// eslint-disable-next-line react/display-name
 const MagicOcean: React.FC<MagicOceanProps> = React.memo(({ text }) => {
   // Use React.memo to prevent unnecessary re-renders
   const typing = useTypewriter(text);

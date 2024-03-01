@@ -1,5 +1,4 @@
-import { GameAddressLocalhost } from "./GameABI";
-import { getOwner, mintNFT, transferNFTToOwner } from "./utils";
+import { mintNFT, transferNFTToOwner } from "./utils";
 
 
 
@@ -13,15 +12,6 @@ export class NFTInternal {
         this.id = id;
         this.address = address;
         this.data = data;
-    }
-    async transferFrom(wallet: string, contractAddress: string): Promise<boolean> {
-        try {
-            await transferNFTToOwner(wallet, this.id, contractAddress, this.address);
-            return true;
-        } catch (e) {
-            console.error(e);
-            return false;
-        }
     }
 }
 
@@ -47,16 +37,6 @@ export class NFT {
     all(): [string, NFTInternal[]][] {
         return Array.from(this.nfts);
     }
-    async mint(name: string, ownerPkey: string): Promise<boolean> {
-        try {
-            const address: string = this.addresses.get(name)!;
-            await mintNFT(this.userAddress, address, ownerPkey);
-            return true;
-        } catch (e) {
-            console.error(e);
-            return false;
-        }
-    }
 }
 
 // put all the users tokens in this
@@ -73,14 +53,6 @@ export class TokenInternal {
         this.name = name;
         this.description = description;
         this.abbr = abbr;
-    }
-    // take tokens from user
-    async transferFrom(wallet: string, contractAddress: string): Promise<boolean> {
-        return false;
-    }
-    // give user tokens
-    async transferTo(wallet: string): Promise<boolean> {
-        return false;
     }
 }
 export class Token {
@@ -101,7 +73,9 @@ export class Token {
 
 export class User {
     data: { [key: string]: number; };
-    constructor() {
+    address: string;
+    constructor(address: string) {
         this.data = {};
+        this.address = address;
     }
 }

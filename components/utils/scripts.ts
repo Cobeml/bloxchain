@@ -3,6 +3,9 @@
 
 export const sauce = `
 <script id="sauce">
+let user;
+let nfts;
+let tokens;
 async function sendTransactionToFrontendAndWait(type, key, args) {
     // key should be unique, otherwise undefined behavior !!
     return new Promise((resolve, reject) => {
@@ -33,6 +36,24 @@ async function requestItemsUpdate() {
         window.addEventListener("message", lookForData);
         window.parent.postMessage({ type:"__handshake" });
     });
+}
+async function awaitObjectDefinition(timeoutLength) {
+    return new Promise((resolve, reject) => {
+        let timeout;
+        const interval = setInterval(async () => {
+            console.log(user, nfts, tokens);
+            if (user && nfts && tokens) {
+                clearInterval(interval);
+                clearTimeout(timeout);
+                resolve();
+            }
+            await sendTransactionToFrontendAndWait("__handshake", (Math.random() * 10000).toString(), {});
+        }, 1000 / 60);
+        timeout = setTimeout(() => {
+            clearInterval(interval);
+            reject("Timeout waiting for response");
+        }, timeoutLength || 200 * 1000);
+    })
 }
 // put all the users nfts into this. 
 class NFTInternal {
@@ -88,13 +109,11 @@ class Token {
 }
 
 class User {
-    constructor() {
+    constructor(address) {
         this.data = {};
+        this.address = address
     }
 }
-let user;
-let nfts;
-let tokens;
 window.addEventListener("message", function (event) {
     const { data } = event;
     console.log(data);
@@ -110,13 +129,15 @@ window.addEventListener("message", function (event) {
                         nfts.data.set(name, value);
                     }
                     for (const [name, value] of data.nfts.nfts) {
-                        // will likely need to do new NFTInternal()
                         const internal = [];
                         for (const val of value) {
                             const n = new NFTInternal(val.id, val.address, val.data);
                             internal.push(n);
                         }
                         nfts.nfts.set(name, internal);
+                    }
+                    for (const [name, address] of data.nfts.addresses) {
+                        nfts.nfts.set(name, address);
                     }
                 }
                 if (data.tokens.exists) {
@@ -128,10 +149,13 @@ window.addEventListener("message", function (event) {
                     console.log(data.tokens);
                 }
                 if (data.user.exists) {
-                    user = new User();
+                    user = new User(data.user.address);
                     user.data = data.user.data;
                     console.log(data.user);
                 }
+                console.log("recieved!");
+                console.log({user: data.user, tokens: data.tokens, nfts: data.nfts});
+                console.log({user, tokens, nfts});
             }
             break;
         }

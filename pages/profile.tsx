@@ -3,8 +3,8 @@ import GameWidget, { GameWidgetProps } from "@/components/GameWidget";
 import ListWidget from "@/components/ListWidget";
 import SplitWidget from "@/components/SplitWidget";
 import { useMetaMask } from "@/components/hooks/useMetaMask";
+import { useSwitchNetwork } from "@/components/hooks/useSwitchNetwork";
 import BasicButton from "@/components/utils/BasicButton";
-import { GameAddressLocalhost } from "@/components/utils/GameABI";
 import { getGame, getMyGames, getNFTData, listGame, redeem, splitGame } from "@/components/utils/utils";
 import { useEffect, useState } from "react";
 
@@ -17,10 +17,11 @@ export default function Profile() {
     const [id, setId] = useState<number>(-1);
     const [showListModal, setShowListModal] = useState<boolean>(false);
     const [showSplitModal, setShowSplitModal] = useState<boolean>(false);
+    const { contractAddress } = useSwitchNetwork();
     const { wallet } = useMetaMask();
     useEffect(() => {
         if (wallet && wallet.accounts.length > 0) {
-            getMyGames(wallet.accounts[0], GameAddressLocalhost).then((games: any) => {
+            getMyGames(wallet.accounts[0], contractAddress).then((games: any) => {
                 getStartingData(games);
             });
         }
@@ -28,7 +29,7 @@ export default function Profile() {
     const getStartingData = async (games: GameResponse) => {
         const g: GameWidgetProps[] = [];
         for (const nft of games.nfts) {
-            const data = await getGame(nft, GameAddressLocalhost);
+            const data = await getGame(nft, contractAddress);
             g.push({
                 name: data.name,
                 description: data.description,
@@ -39,7 +40,7 @@ export default function Profile() {
         setGames(g);
         const gg: GameTokenWidgetProps[] = [];
         for (const { id, balance, supply, address } of games.tokens) {
-            const data = await getGame(id, GameAddressLocalhost);
+            const data = await getGame(id, contractAddress);
             gg.push({
                 name: data.name,
                 description: data.desciption,
@@ -69,12 +70,12 @@ export default function Profile() {
     const sendSplit = async (supply: number, name: string, symbol: string) => {
         if (id === -1) return;
         console.log({ id, supply, name, symbol });
-        await splitGame(id, supply, name, symbol, GameAddressLocalhost);
+        await splitGame(id, supply, name, symbol, contractAddress);
         window.location.reload();
     };
     const sendList = async (price: number, sellToken: string) => {
         if (id === -1) return;
-        await listGame(false, 0, id, price, sellToken, GameAddressLocalhost);
+        await listGame(false, 0, id, price, sellToken, contractAddress);
         window.location.reload();
     };
     return (
@@ -103,7 +104,7 @@ export default function Profile() {
                             ))}
                         </div>
                     ) : (
-                        <p className="text-white text-center">You don't own any games...</p>
+                        <p className="text-white text-center">You {`don't`} own any games...</p>
                     )}
                 </>
             </div>
@@ -125,12 +126,12 @@ export default function Profile() {
                                 <div key={token.num} className="flex flex-col items-center gap-2">
                                     <GameTokenWidget {...token} />
                                     {token.balance === token.supply && (
-                                        <BasicButton onClick={() => redeem(token.num, token.address, GameAddressLocalhost)} text="Redeem" />
+                                        <BasicButton onClick={() => redeem(token.num, token.address, contractAddress)} text="Redeem" />
                                     )}
                                 </div>
                             ))}
                         </div>) : (
-                        <p className="text-white text-center">You don't own any game tokens...</p>
+                        <p className="text-white text-center">You {`don't`} own any game tokens...</p>
                     )}
                 </>
             </div>

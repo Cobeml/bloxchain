@@ -11,6 +11,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.521.0",
     "@metamask/sdk-react": "^0.15.0",
+    "@metamask/sdk-react-ui": "^0.15.0",
     "@monaco-editor/react": "^4.6.0",
     "aws-sdk": "^2.1567.0",
     "ethers": "^6.11.1",

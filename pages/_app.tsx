@@ -1,7 +1,7 @@
 import Wrapper from "@/components/Wrapper";
 import { MetaMaskContextProvider } from "@/components/hooks/useMetaMask";
 import "@/styles/globals.css";
-import { MetaMaskProvider } from "@metamask/sdk-react";
+import { MetaMaskUIProvider } from "@metamask/sdk-react-ui";
 import type { AppProps } from "next/app";
 
 
@@ -10,7 +10,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <MetaMaskContextProvider>
-        <MetaMaskProvider
+        <MetaMaskUIProvider
           debug={false}
           sdkOptions={{
             dappMetadata: {
@@ -22,7 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <Wrapper>
             <Component {...pageProps} />
           </Wrapper>
-        </MetaMaskProvider>
+        </MetaMaskUIProvider>
       </MetaMaskContextProvider>
     </>
   );

@@ -512,3 +512,31 @@ export function chargeUser(amount: number, tokenAddress: string, ownerPkey: stri
 export function shorten(s: string): string {
     return `${s.substring(0, 2)}...${s.substring(s.length - 2, s.length)}`;
 }
+export async function signMessage(message: string, address: string): Promise<boolean> {
+    try {
+        const provider = new BrowserProvider(window.ethereum!);
+        const signer = await provider.getSigner();
+        const sig = await signer.signMessage(message); // returns message;
+        const addr = ethers.verifyMessage(message, sig);
+        console.log(`status: ${addr === address}`);
+        return true;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+}
+
+export function generateRandomAddress(): string {
+    let val = "";
+    const alpha = "abcdefghijklmnoipqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXTZ1234567890";
+    for (let i = 0; i < 20; i++) {
+        val += alpha[Math.floor(Math.random() * alpha.length)];
+    }
+    return val;
+}
+// function verifySignature(message: string,  signature: string): boolean {
+//     // Recreate the same prefixed message that was signe
+
+//     // Recover the address from the signature
+//     const addr = ethers.verifyMessage(message, signature);
+// }

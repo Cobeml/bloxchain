@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import logo from 'bloxchain-logo-no-bg.svg';
+import SwitchNetworkWidget from "./SwitchNetworkWidget";
 
 const info = {
   "Arbitrum One Sepolia": {
@@ -14,20 +15,12 @@ const info = {
   }
 };
 const options = [
-  "Arbitrum One Sepolia",
   "Localhost",
+  "Arbitrum One Sepolia",
   "Solana",
 ];
 export default function Wrapper({ children }: { children: React.ReactNode; }) {
   const router = useRouter();
-  const [chain, setChain] = useState<string>();
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const newValue = event.target.value;
-    setChain(newValue);
-  };
-  useEffect(() => {
-
-  }, [chain]);
   return (
     <div className="bg-gray-900 min-h-screen flex flex-col font-calm">
       <div className="min-h-screen"
@@ -57,19 +50,7 @@ export default function Wrapper({ children }: { children: React.ReactNode; }) {
                   </div>
                 </div>
                 <div className="flex flex-row justify-center items-center gap-2">
-                  <select
-                    className="bg-white text-black border border-gray-300 rounded-md shadow-sm p-2"
-                    value={chain}
-                    onChange={handleChange}
-                  >
-                    {options.map((option: string, i: number) => {
-                      return (
-                        <option key={i} value={option}>
-                          {option}
-                        </option>
-                      );
-                    })}
-                  </select>
+                  <SwitchNetworkWidget />
                 </div>
               </div>
             </div>

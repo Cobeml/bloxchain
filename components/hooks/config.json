@@ -1,0 +1,26 @@
+{
+    "0x13881": {
+        "name": "Mumbai",
+        "contractAddress": "",
+        "privKey": "",
+        "symbol": "MATIC",
+        "blockExplorer": "https://mumbai.polygonscan.com",
+        "rpcUrl": "https://rpc-mumbai.maticvigil.com"
+    },
+    "0xe704": {
+        "name": "Linea",
+        "contractAddress": "",
+        "privKey": "",
+        "symbol": "LineaETH",
+        "blockExplorer": "https://explorer.goerli.linea.build",
+        "rpcUrl": "https://rpc.goerli.linea.build"
+    },
+    "0x1337": {
+        "name": "Localhost",
+        "contractAddress": "",
+        "privKey": "",
+        "symbol": "ETH",
+        "blockExplorer": "",
+        "rpcURL": "http://127.0.0.1:8545/"
+    }
+}

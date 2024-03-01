@@ -1,7 +1,6 @@
 
 import DevButton from '@/components/DevButton';
 import ToggleDivs from '@/components/ToggleDivs';
-import { GameABI, GameAddressLocalhost } from '@/components/utils/GameABI';
 import Loader from '@/components/Loader';
 import { ball, communication, count, post, setup } from '@/components/utils/examples';
 import { useMetaMask } from '@/components/hooks/useMetaMask';
@@ -9,6 +8,7 @@ import { publishGame, saveGame, viewSavedGame, viewSavedGameNames } from '@/comp
 import Editor, { useMonaco } from '@monaco-editor/react';
 import { use, useEffect, useState } from 'react';
 import { uploadFile } from '@/components/utils/aws';
+import { useSwitchNetwork } from '@/components/hooks/useSwitchNetwork';
 // other ways to do this
 // host user html file in iframe
 const defaultCode = `
@@ -76,6 +76,7 @@ export default function Build() {
     const { wallet } = useMetaMask();
     const [file, setFile] = useState<File | null>(null);
     const [viewMode, setViewMode] = useState('files');
+    const { contractAddress } = useSwitchNetwork();
     // useEffect(() => {
     //     // console.log(signer, address);
     //     // if (signer && address && provider) {
@@ -112,7 +113,7 @@ export default function Build() {
     // }, [wallet]);
     useEffect(() => {
         if (wallet && wallet.accounts.length > 0) {
-            viewSavedGameNames(GameAddressLocalhost).then((names: string[]) => {
+            viewSavedGameNames(contractAddress).then((names: string[]) => {
                 setFilenames(names.concat(["Unnamed Game"]));
                 setSelectedFilename("Unnamed Game");
                 setLoadingFiles(false);
@@ -144,7 +145,7 @@ export default function Build() {
     };
     const loadFileData = async (name: string) => {
         if (wallet && wallet.accounts.length > 0) {
-            const code = await viewSavedGame(name, GameAddressLocalhost);
+            const code = await viewSavedGame(name, contractAddress);
             setEditorCode(code || defaultCode);
             setSelectedFilename(name);
         }
@@ -155,7 +156,7 @@ export default function Build() {
         } else {
             let success;
             try {
-                await saveGame(selectedFilename, editorCode, GameAddressLocalhost);
+                await saveGame(selectedFilename, editorCode, contractAddress);
                 success = true;
             } catch (e) {
                 console.error(e);
@@ -205,7 +206,7 @@ export default function Build() {
             const url = await uploadFile(file);
             if (url) imgSrc = url;
         }
-        await publishGame(selectedFilename, editorCode, GameAddressLocalhost, description, imgSrc);
+        await publishGame(selectedFilename, editorCode, contractAddress, description, imgSrc);
     };
     return (
         /* <div className="relative flex w-full h-screen">

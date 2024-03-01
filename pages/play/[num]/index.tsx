@@ -3,11 +3,11 @@ import NFTWidget from "@/components/NFTWidget";
 import TokenWidget from "@/components/TokenWidget";
 import UserWidget from "@/components/UserWidget";
 import { useMetaMask } from "@/components/hooks/useMetaMask";
+import { useSwitchNetwork } from "@/components/hooks/useSwitchNetwork";
 import BasicButton from "@/components/utils/BasicButton";
-import { GameAddressLocalhost, GamePkeyLocalhost, tokenABI } from "@/components/utils/GameABI";
 import { NFT, NFTInternal, Token, TokenInternal, User } from "@/components/utils/crypto";
 import { saucify } from "@/components/utils/scripts";
-import { getGame, getNFTData, getNFTMetadata, getOwnedNFTs, getOwner, getTokenBalance, getTokenMetadata, getUserData, mintNFT, transferNFTToOwner, transferTokenToOwner, transferTokenToUser, updateLeaderboard, updateUserNFT, updateUserStats, viewLeaderboard } from "@/components/utils/utils";
+import { getGame, getNFTMetadata, getOwnedNFTs, getTokenBalance, getTokenMetadata, getUserData, mintNFT, transferNFTToOwner, transferTokenToOwner, transferTokenToUser, updateLeaderboard, updateUserNFT, updateUserStats, viewLeaderboard } from "@/components/utils/utils";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -24,11 +24,12 @@ export default function Game() {
     const [gameNum, setGameNum] = useState<number>(-1);
     const [leaderboard, setLeaderboard] = useState<{ address: string, score: number; }[]>([]);
     const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
+    const { contractAddress, privKey } = useSwitchNetwork();
     useEffect(() => {
         if (router && router.isReady && wallet && wallet.accounts.length > 0) {
             const num = Number(router.query.num);
             setGameNum(num);
-            getGame(num, GameAddressLocalhost).then((game: any) => {
+            getGame(num, contractAddress).then((game: any) => {
                 const owner = game[0];
                 const name = game[1];
                 let code = game[2];
@@ -42,7 +43,7 @@ export default function Game() {
                 // now the goal is to successfully inject that stuff into the app
                 // then the goal is to allow the app to modify the on chain activities through communication
             });
-            viewLeaderboard(num, GameAddressLocalhost).then((leaderboard: { winners: string[], data: number[]; }) => {
+            viewLeaderboard(num, contractAddress).then((leaderboard: { winners: string[], data: number[]; }) => {
                 const l: { address: string, score: number; }[] = [];
                 for (let i = 0; i < leaderboard.winners.length; i++) {
                     l.push({ address: leaderboard.winners[i], score: leaderboard.data[i] });
@@ -66,8 +67,8 @@ export default function Game() {
             const internal = new TokenInternal(t, b, data.name, data.description, data.symbol);
             token.tokens.set(data.name, internal);
         }
-        const user = new User();
-        const uData = await getUserData(wallet.accounts[0], num, GameAddressLocalhost);
+        const user = new User(wallet.accounts[0]);
+        const uData = await getUserData(wallet.accounts[0], num, contractAddress);
         user.data = uData;
 
         const nft = new NFT(num, wallet.accounts[0], true);
@@ -150,7 +151,7 @@ export default function Game() {
                 const { args, key } = event.data;
                 let status: boolean = false;
                 try {
-                    await transferTokenToUser(args.tokenAddress, wallet.accounts[0], args.amount, GamePkeyLocalhost);
+                    await transferTokenToUser(args.tokenAddress, wallet.accounts[0], args.amount, privKey);
                     status = true;
                 } catch (e) {
                     console.error(e);
@@ -165,7 +166,7 @@ export default function Game() {
                 const { args, key } = event.data;
                 let status: boolean = false;
                 try {
-                    await transferTokenToOwner(args.tokenAddress, args.amount, GameAddressLocalhost);
+                    await transferTokenToOwner(args.tokenAddress, args.amount, privKey);
                     status = true;
                 } catch (e) {
                     console.error(e);
@@ -180,7 +181,7 @@ export default function Game() {
                 const { args, key } = event.data;
                 let status: boolean = false;
                 try {
-                    await mintNFT(wallet.accounts[0], args.nftAddress, GamePkeyLocalhost);
+                    await mintNFT(wallet.accounts[0], args.nftAddress, privKey);
                     status = true;
                 } catch (e) {
                     console.error(e);
@@ -195,7 +196,7 @@ export default function Game() {
                 const { args, key } = event.data;
                 let status: boolean = false;
                 try {
-                    await transferNFTToOwner(wallet.accounts[0], args.id, GameAddressLocalhost, args.nftAddress);
+                    await transferNFTToOwner(wallet.accounts[0], args.id, privKey, args.nftAddress);
                     status = true;
                 } catch (e) {
                     console.error(e);
@@ -210,7 +211,7 @@ export default function Game() {
                 const { args, key } = event.data;
                 let status: boolean = false;
                 try {
-                    await updateUserStats(wallet.accounts[0], gameNum, args.keys, args.values, GameAddressLocalhost, GamePkeyLocalhost);
+                    await updateUserStats(wallet.accounts[0], gameNum, args.keys, args.values, contractAddress, privKey);
                     status = true;
                 } catch (e) {
                     console.error(e);
@@ -225,7 +226,7 @@ export default function Game() {
                 const { args, key } = event.data;
                 let status: boolean = false;
                 try {
-                    await updateUserNFT(args.id, args.keys, args.values, args.nftAddress, GamePkeyLocalhost);
+                    await updateUserNFT(args.id, args.keys, args.values, args.nftAddress, privKey);
                     status = true;
                 } catch (e) {
                     console.error(e);
@@ -240,7 +241,7 @@ export default function Game() {
                 const { args, key } = event.data;
                 let status: boolean = false;
                 try {
-                    await updateLeaderboard(gameNum, wallet.accounts[0], args.data, GameAddressLocalhost, GamePkeyLocalhost);
+                    await updateLeaderboard(gameNum, wallet.accounts[0], args.data, contractAddress, privKey);
                     status = true;
                 } catch (e) {
                     console.error(e);
@@ -276,7 +277,7 @@ export default function Game() {
             <div className="absolute flex flex-row justify-between items-center bottom-0 left-0 w-full">
                 <div className="flex flex-row justify-between items-center w-[50%]">
                     <NFTWidget nfts={nfts || new NFT(gameNum, wallet.accounts[0], true)} real={true} showEditWindow={() => null} />
-                    <UserWidget user={user || new User()} real={true} showEditWindow={() => null} />
+                    <UserWidget user={user || new User("0x0000000")} real={true} showEditWindow={() => null} />
                     <TokenWidget tokens={tokens || new Token(gameNum, wallet.accounts[0], true)} real={true} showEditWindow={() => null} />
                 </div>
                 <div className="flex flex-row justify-center items-center w-[50%] gap-2">

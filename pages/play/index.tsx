@@ -1,14 +1,15 @@
-import { GameAddressLocalhost } from "@/components/utils/GameABI";
 import { useMetaMask } from "@/components/hooks/useMetaMask";
+import { useSwitchNetwork } from "@/components/hooks/useSwitchNetwork";
 import { getAllGames } from "@/components/utils/utils";
 import { useEffect, useState } from "react";
 
 export default function Play() {
     const { wallet } = useMetaMask();
     const [games, setGames] = useState<{ name: string, num: number; }[]>([]);
+    const { contractAddress } = useSwitchNetwork();
     useEffect(() => {
         if (wallet && wallet.accounts.length > 0) {
-            getAllGames(GameAddressLocalhost).then((games) => {
+            getAllGames(contractAddress).then((games) => {
                 const names = games[0];
                 const nums = games[1];
                 let g: { name: string, num: number; }[] = [];
