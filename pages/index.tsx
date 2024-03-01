@@ -15,9 +15,7 @@ const Home = () => {
   const [heading] = React.useState("Welcome to Bloxchain"); // No setter needed if it's static
   const texts = React.useMemo(() => [
     '\n',
-    'Bringing the Roblox Experience Onchain',
-    '\n',
-    'Play, Build, Earn, Own, Enjoy'
+    'Play, Build, Own'
   ], []); // useMemo to ensure the texts array doesn't get re-initialized on every render
 
   const [index, setIndex] = React.useState(0);
@@ -41,9 +39,11 @@ const Home = () => {
       <h1 className="text-8xl font-bold text-white">
         <MagicOcean text={heading} />
       </h1>
-      <h2 className="text-5xl mt-6 text-white" style={{ minHeight: '4rem' }}>
-        <MagicOcean text={magicName} />
-      </h2>
+      <div className="flex flex-col items-center justify-center w-full">
+        <h2 className="text-6xl mt-6 text-white text-center font-bold" style={{ minHeight: '4rem' }}>
+          <MagicOcean text={magicName} />
+        </h2>
+      </div>
     </div>
   );
 };
