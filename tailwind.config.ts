@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'logo-glyph': "url('/bloxchain-logo-no-bg-no-name.png')",
+      },
       keyframes: {
         gradient: {
           '0%, 100%': {

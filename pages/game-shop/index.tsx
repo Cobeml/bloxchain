@@ -45,10 +45,10 @@ export default function GameShop() {
     };
     return (
         <div className="flex flex-col items-center justify-start h-screen p-4 w-screen" style={{ height: '90vh' }}>
-            <div className="w-full flex-grow bg-gray-800 overflow-auto p-4 rounded-lg mx-6 mb-6">
+            <div className="w-full flex-grow bg-gray-800 overflow-auto p-4 rounded-lg mx-6">
                 <>
                     <div className="flex justify-between items-center mb-4">
-                        <p className="text-white">Games Listings</p>
+                        <p className="text-white">Games/Token Listings</p>
                         <input
                             type="text"
                             placeholder="Search Listings..."
@@ -57,7 +57,7 @@ export default function GameShop() {
                     </div>
                     <div className="flex flex-row justify-center items-center w-full">
                         {listings.length == 0 ?
-                            <div className="text-white"> No game listings for sale </div>
+                            <div className="text-white"> No game or token listings for sale </div>
                             :
                             <div className="grid grid-cols-4 place-items-center items-center gap-4">
                                 {listings.map((listing, i: number) => <GameListingWidget buy={() => buy(listing.id, listing.price, listing.sellToken)} key={i} {...listing} />)}

@@ -38,10 +38,10 @@ const Home = () => {
 
   return (
     <div className="flex flex-col items-start justify-center h-screen p-10" style={{ height: '90vh' }}>
-      <h1 className="text-8xl font-bold text-indigo-400">
+      <h1 className="text-8xl font-bold text-white">
         <MagicOcean text={heading} />
       </h1>
-      <h2 className="text-5xl mt-6 text-indigo-400" style={{ minHeight: '4rem' }}>
+      <h2 className="text-5xl mt-6 text-white" style={{ minHeight: '4rem' }}>
         <MagicOcean text={magicName} />
       </h2>
     </div>

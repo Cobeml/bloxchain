@@ -58,7 +58,7 @@ export default function Shop() {
     };
     return (
         <div className="flex flex-col justify-center items-center gap-2">
-            <div className="w-full flex-grow bg-gray-800 overflow-auto p-4 rounded-lg mx-6 mb-6">
+            <div className="w-full flex-grow bg-gray-800 overflow-auto p-4 rounded-lg mx-6">
                 <>
                     <div className="flex justify-between items-center mb-4">
                         <p className="text-white">NFT Shop</p>
@@ -85,14 +85,20 @@ export default function Shop() {
                     </div>
                 </>
             </div>
-            <p>List your NFTs for Sale</p>
             {userListable &&
-                <BasicButton onClick={() => setShowListing(true)} text="List an Item" />
-            }
-            {showListing &&
-                <div className="absolute w-auto h-auto bg-gray-400 p-4 rounded-lg flex flex-col justify-center items-center gap-2" style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
-                    <ListItemWidget list={list} tokenAddresses={tokenAddresses} nftAddresses={nftAddresses} />
-                    <BasicButton onClick={() => setShowListing(false)} text="Close" />
+                <div className="w-full bg-gray-800 overflow-auto p-4 rounded-lg mx-6">
+                    <div className="flex justify-between items-center mb-4">
+                        <p className="text-white">List your NFTs for Sale</p>
+                    </div>
+                    <div className="flex flex-row justify-center items-center w-full">
+                        <BasicButton onClick={() => setShowListing(true)} text="List an Item" />
+                        {showListing &&
+                            <div className="absolute w-auto h-auto bg-gray-400 p-4 rounded-lg flex flex-col justify-center items-center gap-2" style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+                                <ListItemWidget list={list} tokenAddresses={tokenAddresses} nftAddresses={nftAddresses} />
+                                <BasicButton onClick={() => setShowListing(false)} text="Close" />
+                            </div>
+                        }
+                    </div>
                 </div>
             }
         </div>

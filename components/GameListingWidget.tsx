@@ -28,7 +28,7 @@ export default function GameListingWidget({ id, isToken, amount, gameId, price, 
                 <GameWidget name={name} description={description} imgSrc={imgSrc} num={gameId} />
             }
             <p>{`Buy for ${price} ${shorten(sellToken)}`}</p>
-            <p>{`Sold by ${shorten(seller)}`}</p>
+            <p>{`Seller: ${shorten(seller)}`}</p>
             <BasicButton onClick={buy} text="Buy" />
         </div>
     );
