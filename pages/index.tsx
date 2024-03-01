@@ -15,7 +15,7 @@ const Home = () => {
   const [heading] = React.useState("Welcome to Bloxchain"); // No setter needed if it's static
   const texts = React.useMemo(() => [
     '\n',
-    'Play, Build, Own'
+    'Build, Play, Own'
   ], []); // useMemo to ensure the texts array doesn't get re-initialized on every render
 
   const [index, setIndex] = React.useState(0);
