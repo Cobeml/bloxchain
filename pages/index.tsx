@@ -40,7 +40,7 @@ const Home = () => {
         <MagicOcean text={heading} />
       </h1>
       <div className="flex flex-col items-center justify-center w-full">
-        <h2 className="text-6xl mt-6 text-white text-center font-bold" style={{ minHeight: '4rem' }}>
+        <h2 className="text-6xl mt-6 text-white text-center font-semi-bold" style={{ minHeight: '4rem' }}>
           <MagicOcean text={magicName} />
         </h2>
       </div>
