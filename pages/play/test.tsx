@@ -358,17 +358,21 @@ export default function PlayTest() {
     };
     return (
         <>
-            <div className="w-auto h-auto" style={{ height: "inherit" }}>
-                <iframe id="game" srcDoc={code} frameBorder={0}></iframe>
-            </div>
-            <div className="absolute bottom-0 left-0 w-full flex flex-row justify-between">
-                {nfts && <NFTWidget nfts={nfts} real={false} showEditWindow={showEditWindowNFT} />}
-                {user && <UserWidget user={user} real={false} showEditWindow={showEditWindowUser} />}
-                {/* <BasicButton onClick={loadIntoGame} text="Load Assets" /> */}
-                {tokens && <TokenWidget tokens={tokens} real={false} showEditWindow={showEditWindowToken} />}
+           <div className="flex w-full flex-grow h-full justify-center items-center"> {/* Wrapper div with column layout and full screen height */}
+                <div className="flex-grow w-full h-full justify-center items-center"> {/* Container for iframe that will grow to take available space */}
+                    <iframe id="game" srcDoc={code} frameBorder={0} className="flex-grow w-full h-full"></iframe> {/* Full width and height within its container */}
+                </div>
+                <div className="w-full"> {/* Container for the buttons to sit at the bottom */}
+                    <div className="absolute bottom-0 left-0 w-full flex flex-row justify-between">
+                        {nfts && <NFTWidget nfts={nfts} real={false} showEditWindow={showEditWindowNFT} />}
+                        {user && <UserWidget user={user} real={false} showEditWindow={showEditWindowUser} />}
+                        {/* <BasicButton onClick={loadIntoGame} text="Load Assets" /> */}
+                        {tokens && <TokenWidget tokens={tokens} real={false} showEditWindow={showEditWindowToken} />}
+                    </div>
+                </div>
             </div>
             {editWindowUser &&
-                <div className="absolute flex flex-col justify-center items-center p-4 rounded-lg bg-white border border-black" style={{ top: '50%', left: '50%', transform: "translate(-50%, -50%)" }}>
+                <div className="absolute flex flex-col flex-grow ustify-center items-center p-4 rounded-lg bg-white border border-black" style={{ top: '50%', left: '50%', transform: "translate(-50%, -50%)" }}>
                     {Object.entries(dataToEdit).map(([key, value]: [string, number], i: number) => {
                         return (
                             <div key={i} className="flex flex-row items-center gap-2">
