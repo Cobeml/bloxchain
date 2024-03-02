@@ -269,18 +269,20 @@ export default function Game() {
         }
     };
     return (
-        <div className="flex flex-col justify-center items-center gap-2 text-center">
-            <p>{`${name} by ${owner}`}</p>
-            <div className="w-auto h-auto bg-blue-600" style={{ height: "inherit" }}>
-                <iframe id="game" srcDoc={code} frameBorder={0}></iframe>
-            </div>
-            <div className="absolute flex flex-row justify-between items-center bottom-0 left-0 w-full">
-                <div className="flex flex-row justify-between items-center w-[50%]">
-                    {/* <NFTWidget nfts={nfts || new NFT(gameNum, "0x0000", true)} real={true} showEditWindow={() => null} />
-                    <UserWidget user={user || new User("0x0000000")} real={true} showEditWindow={() => null} />
-                    <TokenWidget tokens={tokens || new Token(gameNum, "0x0000", true)} real={true} showEditWindow={() => null} /> */}
+        <div className="flex flex-col justify-center items-center gap-2 text-center h-full w-full">
+            <div className="flex w-full flex-grow h-full justify-center items-center"> {/* Wrapper div with column layout and full screen height */}
+                <div className="flex-grow w-full h-full justify-center items-center"> {/* Container for iframe that will grow to take available space */}
+                    <iframe id="game" srcDoc={code} frameBorder={0} className="w-screen h-screen"></iframe> {/* Full width and height within its container */}
                 </div>
-                <div className="flex flex-row justify-center items-center w-[50%] gap-2">
+                <div className="w-full"> {/* Container for the buttons to sit at the bottom */}
+                    <div className="absolute bottom-0 left-0 w-full flex flex-row justify-between">
+                        {/* {nfts && <NFTWidget nfts={nfts} real={false} showEditWindow={showEditWindowNFT} />}
+                        {user && <UserWidget user={user} real={false} showEditWindow={showEditWindowUser} />}
+                        {/* <BasicButton onClick={loadIntoGame} text="Load Assets" /> */}
+                        {/* {tokens && <TokenWidget tokens={tokens} real={false} showEditWindow={showEditWindowToken} />} */}
+                    </div>
+                </div>
+                <div className="absolute bottom-0 flex flex-row justify-center items-center w-[50%] gap-2">
                     <BasicButton text="Show Leaderboard" onClick={() => setShowLeaderboard(true)} />
                     <BasicButton text="Visit Shop" onClick={() => window.location.href = `/play/${gameNum}/shop`} />
                 </div>
