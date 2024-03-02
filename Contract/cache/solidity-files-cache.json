@@ -1,7 +1,47 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/Users/cobeliu/Downloads/bloxchain-contract/contracts/Game.sol": {
+    "/Users/cobeliu/bloxchain/Contract/contracts/DAO.sol": {
+      "lastModificationDate": 1709387403033,
+      "contentHash": "b8b6ff92073a3f76d754cea0143d8620",
+      "sourceName": "contracts/DAO.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Game.sol",
+        "./GameShop.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.24"
+      ],
+      "artifacts": [
+        "DAO"
+      ]
+    },
+    "/Users/cobeliu/bloxchain/Contract/contracts/Game.sol": {
       "lastModificationDate": 1709387382269,
       "contentHash": "3683eac0f781887d061d0d79db7af5e1",
       "sourceName": "contracts/Game.sol",
@@ -49,7 +89,273 @@
         "Game"
       ]
     },
-    "/Users/cobeliu/Downloads/bloxchain-contract/node_modules/hardhat/console.sol": {
+    "/Users/cobeliu/bloxchain/Contract/contracts/GameShop.sol": {
+      "lastModificationDate": 1709387398937,
+      "contentHash": "50adc8a435b7e3cc341b0de9a3e22c14",
+      "sourceName": "contracts/GameShop.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./GameToken.sol",
+        "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.24"
+      ],
+      "artifacts": [
+        "GameShop"
+      ]
+    },
+    "/Users/cobeliu/bloxchain/Contract/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+      "lastModificationDate": 1709340990724,
+      "contentHash": "5517c8678c18eb1a8ba58810e7ca39ca",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IERC20"
+      ]
+    },
+    "/Users/cobeliu/bloxchain/Contract/contracts/GameToken.sol": {
+      "lastModificationDate": 1709387398937,
+      "contentHash": "d44dc28aeedb78e6a28487b7a8bbba8c",
+      "sourceName": "contracts/GameToken.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.24"
+      ],
+      "artifacts": [
+        "GameToken"
+      ]
+    },
+    "/Users/cobeliu/bloxchain/Contract/contracts/GameNFT.sol": {
+      "lastModificationDate": 1709387398937,
+      "contentHash": "74f5ff1f914955f072ba9b2125295486",
+      "sourceName": "contracts/GameNFT.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "GameNFT"
+      ]
+    },
+    "/Users/cobeliu/bloxchain/Contract/contracts/Leaderboard.sol": {
+      "lastModificationDate": 1709387398942,
+      "contentHash": "84dffd6af117f0979c00be0b596feb91",
+      "sourceName": "contracts/Leaderboard.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.24"
+      ],
+      "artifacts": [
+        "Leaderboard"
+      ]
+    },
+    "/Users/cobeliu/bloxchain/Contract/contracts/Shop.sol": {
+      "lastModificationDate": 1709387398945,
+      "contentHash": "704e2bc3454a8a863b0ecfb2e65189f5",
+      "sourceName": "contracts/Shop.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Shop"
+      ]
+    },
+    "/Users/cobeliu/bloxchain/Contract/contracts/User.sol": {
+      "lastModificationDate": 1709387398944,
+      "contentHash": "46af65d993a7d3e4483e1a542ffd0ce4",
+      "sourceName": "contracts/User.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.24"
+      ],
+      "artifacts": [
+        "User"
+      ]
+    },
+    "/Users/cobeliu/bloxchain/Contract/node_modules/hardhat/console.sol": {
       "lastModificationDate": 1709340991041,
       "contentHash": "896f68942c3a20e9ae3c3c5bfd3add54",
       "sourceName": "hardhat/console.sol",
@@ -85,7 +391,7 @@
         "console"
       ]
     },
-    "/Users/cobeliu/Downloads/bloxchain-contract/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
+    "/Users/cobeliu/bloxchain/Contract/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
       "lastModificationDate": 1709340990750,
       "contentHash": "d3c790edc9ccf808a17c5a6cd13614fd",
       "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
@@ -123,43 +429,7 @@
         "Ownable"
       ]
     },
-    "/Users/cobeliu/Downloads/bloxchain-contract/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
-      "lastModificationDate": 1709340990724,
-      "contentHash": "5517c8678c18eb1a8ba58810e7ca39ca",
-      "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "IERC20"
-      ]
-    },
-    "/Users/cobeliu/Downloads/bloxchain-contract/node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol": {
+    "/Users/cobeliu/bloxchain/Contract/node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol": {
       "lastModificationDate": 1709340990668,
       "contentHash": "6f49fe93ad40dc0bd4cac0cc124d0415",
       "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
@@ -199,7 +469,7 @@
         "ERC721Enumerable"
       ]
     },
-    "/Users/cobeliu/Downloads/bloxchain-contract/node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
+    "/Users/cobeliu/bloxchain/Contract/node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
       "lastModificationDate": 1709340990628,
       "contentHash": "c6375ef25e84c90b3d15f9ec4eef218f",
       "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
@@ -240,7 +510,7 @@
         "ERC20"
       ]
     },
-    "/Users/cobeliu/Downloads/bloxchain-contract/node_modules/@openzeppelin/contracts/utils/Context.sol": {
+    "/Users/cobeliu/bloxchain/Contract/node_modules/@openzeppelin/contracts/utils/Context.sol": {
       "lastModificationDate": 1709340990575,
       "contentHash": "67bfbc07588eb8683b3fd8f6f909563e",
       "sourceName": "@openzeppelin/contracts/utils/Context.sol",
@@ -276,7 +546,7 @@
         "Context"
       ]
     },
-    "/Users/cobeliu/Downloads/bloxchain-contract/node_modules/@openzeppelin/contracts/interfaces/draft-IERC6093.sol": {
+    "/Users/cobeliu/bloxchain/Contract/node_modules/@openzeppelin/contracts/interfaces/draft-IERC6093.sol": {
       "lastModificationDate": 1709340990586,
       "contentHash": "4aefc698f77ecbace7f401257dfe182d",
       "sourceName": "@openzeppelin/contracts/interfaces/draft-IERC6093.sol",
@@ -314,7 +584,7 @@
         "IERC721Errors"
       ]
     },
-    "/Users/cobeliu/Downloads/bloxchain-contract/node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
+    "/Users/cobeliu/bloxchain/Contract/node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
       "lastModificationDate": 1709340990725,
       "contentHash": "4c02fa6f7ae7b6c289cef80424f0c875",
       "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
@@ -352,7 +622,7 @@
         "IERC20Metadata"
       ]
     },
-    "/Users/cobeliu/Downloads/bloxchain-contract/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol": {
+    "/Users/cobeliu/bloxchain/Contract/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol": {
       "lastModificationDate": 1709340990658,
       "contentHash": "1e64e2ad597dc5b2dae11346502baad4",
       "sourceName": "@openzeppelin/contracts/token/ERC721/ERC721.sol",
@@ -396,45 +666,7 @@
         "ERC721"
       ]
     },
-    "/Users/cobeliu/Downloads/bloxchain-contract/node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol": {
-      "lastModificationDate": 1709340990618,
-      "contentHash": "6a55c353946e471d9792965d06208295",
-      "sourceName": "@openzeppelin/contracts/utils/introspection/ERC165.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./IERC165.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "ERC165"
-      ]
-    },
-    "/Users/cobeliu/Downloads/bloxchain-contract/node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol": {
+    "/Users/cobeliu/bloxchain/Contract/node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol": {
       "lastModificationDate": 1709340990736,
       "contentHash": "5df8fdb527e563085847cad29e3c5f2e",
       "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
@@ -472,43 +704,7 @@
         "IERC721"
       ]
     },
-    "/Users/cobeliu/Downloads/bloxchain-contract/node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": {
-      "lastModificationDate": 1709340990739,
-      "contentHash": "fc8a9841f4bdd6329c26a00d5e75f4b3",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "IERC721Receiver"
-      ]
-    },
-    "/Users/cobeliu/Downloads/bloxchain-contract/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
+    "/Users/cobeliu/bloxchain/Contract/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
       "lastModificationDate": 1709340990770,
       "contentHash": "ba57ff4ddf1d9cae9d2009792795b7f6",
       "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
@@ -547,7 +743,81 @@
         "Strings"
       ]
     },
-    "/Users/cobeliu/Downloads/bloxchain-contract/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
+    "/Users/cobeliu/bloxchain/Contract/node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": {
+      "lastModificationDate": 1709340990739,
+      "contentHash": "fc8a9841f4bdd6329c26a00d5e75f4b3",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IERC721Receiver"
+      ]
+    },
+    "/Users/cobeliu/bloxchain/Contract/node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol": {
+      "lastModificationDate": 1709340990618,
+      "contentHash": "6a55c353946e471d9792965d06208295",
+      "sourceName": "@openzeppelin/contracts/utils/introspection/ERC165.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IERC165.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "ERC165"
+      ]
+    },
+    "/Users/cobeliu/bloxchain/Contract/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
       "lastModificationDate": 1709340990738,
       "contentHash": "12c206f185cb951213799561fdcaa40d",
       "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol",
@@ -585,7 +855,7 @@
         "IERC721Metadata"
       ]
     },
-    "/Users/cobeliu/Downloads/bloxchain-contract/node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+    "/Users/cobeliu/bloxchain/Contract/node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
       "lastModificationDate": 1709340990722,
       "contentHash": "de0163561b417b800d01749cbbe2147e",
       "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
@@ -621,7 +891,7 @@
         "IERC165"
       ]
     },
-    "/Users/cobeliu/Downloads/bloxchain-contract/node_modules/@openzeppelin/contracts/utils/math/Math.sol": {
+    "/Users/cobeliu/bloxchain/Contract/node_modules/@openzeppelin/contracts/utils/math/Math.sol": {
       "lastModificationDate": 1709340990747,
       "contentHash": "718fa8ba0ff269c92e364c1429d9de57",
       "sourceName": "@openzeppelin/contracts/utils/math/Math.sol",
@@ -657,7 +927,7 @@
         "Math"
       ]
     },
-    "/Users/cobeliu/Downloads/bloxchain-contract/node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol": {
+    "/Users/cobeliu/bloxchain/Contract/node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol": {
       "lastModificationDate": 1709340990766,
       "contentHash": "b6c6bdc7aaca4fe5b680760a72e09d3e",
       "sourceName": "@openzeppelin/contracts/utils/math/SignedMath.sol",
@@ -693,7 +963,7 @@
         "SignedMath"
       ]
     },
-    "/Users/cobeliu/Downloads/bloxchain-contract/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol": {
+    "/Users/cobeliu/bloxchain/Contract/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol": {
       "lastModificationDate": 1709340990737,
       "contentHash": "3fdc14aab706458ae99314f6f7f529a2",
       "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol",
@@ -731,277 +1001,7 @@
         "IERC721Enumerable"
       ]
     },
-    "/Users/cobeliu/Downloads/bloxchain-contract/contracts/DAO.sol": {
-      "lastModificationDate": 1709387403033,
-      "contentHash": "b8b6ff92073a3f76d754cea0143d8620",
-      "sourceName": "contracts/DAO.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./Game.sol",
-        "./GameShop.sol",
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.24"
-      ],
-      "artifacts": [
-        "DAO"
-      ]
-    },
-    "/Users/cobeliu/Downloads/bloxchain-contract/contracts/GameShop.sol": {
-      "lastModificationDate": 1709387398937,
-      "contentHash": "50adc8a435b7e3cc341b0de9a3e22c14",
-      "sourceName": "contracts/GameShop.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./GameToken.sol",
-        "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        "@openzeppelin/contracts/access/Ownable.sol",
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "@openzeppelin/contracts/access/Ownable.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.24"
-      ],
-      "artifacts": [
-        "GameShop"
-      ]
-    },
-    "/Users/cobeliu/Downloads/bloxchain-contract/contracts/GameToken.sol": {
-      "lastModificationDate": 1709387398937,
-      "contentHash": "d44dc28aeedb78e6a28487b7a8bbba8c",
-      "sourceName": "contracts/GameToken.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.24"
-      ],
-      "artifacts": [
-        "GameToken"
-      ]
-    },
-    "/Users/cobeliu/Downloads/bloxchain-contract/contracts/Leaderboard.sol": {
-      "lastModificationDate": 1709387398942,
-      "contentHash": "84dffd6af117f0979c00be0b596feb91",
-      "sourceName": "contracts/Leaderboard.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.24"
-      ],
-      "artifacts": [
-        "Leaderboard"
-      ]
-    },
-    "/Users/cobeliu/Downloads/bloxchain-contract/contracts/GameNFT.sol": {
-      "lastModificationDate": 1709387398937,
-      "contentHash": "74f5ff1f914955f072ba9b2125295486",
-      "sourceName": "contracts/GameNFT.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC721/ERC721.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "GameNFT"
-      ]
-    },
-    "/Users/cobeliu/Downloads/bloxchain-contract/contracts/User.sol": {
-      "lastModificationDate": 1709387398944,
-      "contentHash": "46af65d993a7d3e4483e1a542ffd0ce4",
-      "sourceName": "contracts/User.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.24"
-      ],
-      "artifacts": [
-        "User"
-      ]
-    },
-    "/Users/cobeliu/Downloads/bloxchain-contract/contracts/Shop.sol": {
-      "lastModificationDate": 1709387398945,
-      "contentHash": "704e2bc3454a8a863b0ecfb2e65189f5",
-      "sourceName": "contracts/Shop.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "@openzeppelin/contracts/access/Ownable.sol",
-        "@openzeppelin/contracts/token/ERC721/ERC721.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "Shop"
-      ]
-    },
-    "/Users/cobeliu/Downloads/bloxchain-contract/contracts/DeFI.sol": {
+    "/Users/cobeliu/bloxchain/Contract/contracts/DeFI.sol": {
       "lastModificationDate": 1709387397999,
       "contentHash": "7f55a931008d4730a9c2e11b91a3a2d8",
       "sourceName": "contracts/DeFI.sol",
