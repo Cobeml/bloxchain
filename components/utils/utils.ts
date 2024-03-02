@@ -87,17 +87,17 @@ export async function publishGame(name: string, code: string, address: string, d
         if (setupScript) {
             const scriptCode = setupScript.innerHTML;
             const c = `
-            (function () {
-                let r;
-                try {
-                    ${scriptCode}
-                    r = setup()
-                } catch (e) {
-                    console.error(e);
-                }
-                return r;
-            })();
-        `;
+                (function () {
+                    let r;
+                    try {
+                        ${scriptCode}
+                        r = setup()
+                    } catch (e) {
+                        console.error(e);
+                    }
+                    return r;
+                })();
+            `;
             const result = eval(c);
             if (result.tokens) {
                 for (const token of result.tokens) {
@@ -351,9 +351,10 @@ export async function viewLeaderboard(game: number, contractAddress: string): Pr
     const leaderboardAddress = await contract.leaderboard();
     const leaderboard = new Contract(leaderboardAddress, LeaderboardABI, provider);
     const data = await leaderboard.viewLeaderboard(game);
+    console.log({data});
     return {
         winners: data[0],
-        data: data[2],
+        data: data[1],
     };
 }
 

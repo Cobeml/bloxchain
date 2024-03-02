@@ -21,10 +21,13 @@ export default function Profile() {
     const { wallet } = useMetaMask();
     useEffect(() => {
         if (wallet && wallet.accounts.length > 0) {
+            console.log(":)")
             getMyGames(wallet.accounts[0], contractAddress).then((games: any) => {
+                console.log(games);
                 getStartingData(games);
             });
         }
+        console.log(":(")
     }, [wallet]);
     const getStartingData = async (games: GameResponse) => {
         const g: GameWidgetProps[] = [];

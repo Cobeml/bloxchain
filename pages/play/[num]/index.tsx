@@ -276,9 +276,9 @@ export default function Game() {
             </div>
             <div className="absolute flex flex-row justify-between items-center bottom-0 left-0 w-full">
                 <div className="flex flex-row justify-between items-center w-[50%]">
-                    <NFTWidget nfts={nfts || new NFT(gameNum, wallet.accounts[0], true)} real={true} showEditWindow={() => null} />
+                    {/* <NFTWidget nfts={nfts || new NFT(gameNum, "0x0000", true)} real={true} showEditWindow={() => null} />
                     <UserWidget user={user || new User("0x0000000")} real={true} showEditWindow={() => null} />
-                    <TokenWidget tokens={tokens || new Token(gameNum, wallet.accounts[0], true)} real={true} showEditWindow={() => null} />
+                    <TokenWidget tokens={tokens || new Token(gameNum, "0x0000", true)} real={true} showEditWindow={() => null} /> */}
                 </div>
                 <div className="flex flex-row justify-center items-center w-[50%] gap-2">
                     <BasicButton text="Show Leaderboard" onClick={() => setShowLeaderboard(true)} />

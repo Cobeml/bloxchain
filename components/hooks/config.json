@@ -1,7 +1,7 @@
 {    
     "0x66eee": {
         "name": "Arbitrum Sepolia",
-        "contractAddress": "0xbB079E4242Ec6d29B970C989BB6C4C1D1Ff93f24",
+        "contractAddress": "0x526373bFd4BBBb6173F0E5BE389540c4D2F5357f",
         "privKey": "1013bc81f42776bc452b302702fff266d168af17fb2fa8afcc9d78e4d19b82b3",
         "symbol": "ETH",
         "blockExplorer": "",
@@ -38,14 +38,6 @@
         "symbol": "TXDC",
         "blockExplorer": "https://apothem.xinfinscan.com",
         "rpcURL": "https://rpc.apothem.network"
-    },
-    "0x4cb2f": {
-        "name": "Filecoin - Calibration testnet",
-        "contractAddress": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-        "privKey": "1013bc81f42776bc452b302702fff266d168af17fb2fa8afcc9d78e4d19b82b3",
-        "symbol": "tFIL",
-        "blockExplorer": "https://calibration.filscan.io",
-        "rpcURL": "https://filecoin-calibration.chainup.net/rpc/v1"
     },
     "0xa455": {
         "name": "Fhenix Frontier",
