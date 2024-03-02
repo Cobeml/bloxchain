@@ -191,9 +191,13 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
 };
 
 export const useMetaMask = () => {
-    const context = useContext(MetaMaskContext);
-    if (context === undefined) {
-        throw new Error('useMetaMask must be used within a "MetaMaskContextProvider"');
-    }
-    return context;
+    const [wallet, setWallet] = useState<any>();
+    useEffect(() => {
+        if (window.ethereum) {
+            window.ethereum.request({method: "eth_requestAccounts"}).then((accounts) => {
+                setWallet({accounts})
+            } )
+        }
+    }, [])
+    return { wallet };
 };

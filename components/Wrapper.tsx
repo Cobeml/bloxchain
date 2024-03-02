@@ -2,23 +2,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import logo from 'bloxchain-logo-no-bg.svg';
 import SwitchNetworkWidget from "./SwitchNetworkWidget";
-
-const info = {
-  "Arbitrum One Sepolia": {
-    contractAddress: "",
-  },
-  "Localhost": {
-    contractAddress: "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"
-  },
-  "Solana": {
-
-  }
-};
-const options = [
-  "Localhost",
-  "Arbitrum One Sepolia",
-  "Solana",
-];
 export default function Wrapper({ children }: { children: React.ReactNode; }) {
   const router = useRouter();
   return (

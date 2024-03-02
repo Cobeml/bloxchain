@@ -77,48 +77,16 @@ export default function Build() {
     const [file, setFile] = useState<File | null>(null);
     const [viewMode, setViewMode] = useState('files');
     const { contractAddress } = useSwitchNetwork();
-    // useEffect(() => {
-    //     // console.log(signer, address);
-    //     // if (signer && address && provider) {
-    //     //     const contract = new ethers.Contract(GameAddressLocalhost, GameABI, signer);
-    //     //     contract.saveGame("test", "console.log('hello world'").then((tx) => {
-    //     //         tx.wait().then((receipt: any) => {
-    //     //             console.log(receipt);
-    //     //         });
-    //     //     });
-    //     // }
-    //     console.log(wallet);
-    //     if (wallet && window.ethereum) {
-    //         console.log("hi");
-    //         const provider = new ethers.BrowserProvider(window.ethereum);
-    //         provider.getSigner().then((signer: any) => {
-    //             const contract = new ethers.Contract(GameAddressLocalhost, GameABI, signer);
-    //             // console.log(contract);
-    //             // contract call
-    //             // contract.saveGame("test", "console.log('hello world')").then((tx: any) => {
-    //             //     console.log(tx);
-    //             //     tx.wait().then((receipt: any) => {
-    //             //         console.log(receipt);
-    //             //     });
-    //             // });
-    //             /* 
-    //             view function
-    //             contract.viewSavedGame("test").then((result: any) => {
-    //                 console.log(result);
-    //              }); 
-    //             */
-    //         });
-
-    //     }
-    // }, [wallet]);
     useEffect(() => {
         if (wallet && wallet.accounts.length > 0) {
+            console.log("wqllet is defined")
             viewSavedGameNames(contractAddress).then((names: string[]) => {
                 setFilenames(names.concat(["Unnamed Game"]));
                 setSelectedFilename("Unnamed Game");
                 setLoadingFiles(false);
             }).catch((e) => console.error(e));
         }
+        console.log({wallet})
     }, [wallet]);
     useEffect(() => {
         const handleSave = (event: KeyboardEvent) => {
@@ -209,59 +177,6 @@ export default function Build() {
         await publishGame(selectedFilename, editorCode, contractAddress, description, imgSrc);
     };
     return (
-        /* <div className="relative flex w-full h-screen">
-            <div className="w-1/6 bg-gray-800 text-white overflow-auto">
-                {
-                    viewMode === "files" ? (
-                        <>
-                            <h2 className="text-lg font-semibold p-4">Files</h2>
-                            {loadingFiles ?
-                                <Loader height="h-16" width="w-16" />
-                                :
-                                <div className="flex flex-col p-4 gap-2">
-                                    {filenames.length === 0 ?
-                                        <p>No files found</p>
-                                        :
-                                        filenames.map((name: string, i: number) => {
-                                            return (
-                                                <div key={i} onClick={() => loadFileData(name)} className={`cursor-pointer p-2 rounded-md hover:bg-gray-700`}>
-                                                    {name}
-                                                </div>
-                                            );
-                                        })
-                                    }
-                                </div>
-                            }
-                            <DevButton onClick={() => setViewMode("actions")} text="Actions" />
-                        </>
-                    ) : (
-                        <>
-                            <h2 className="text-lg font-semibold p-4">Actions</h2>
-                            <div className="flex flex-col p-4 gap-2">
-                                <DevButton onClick={saveAndTest} text="Test Locally" />
-                                <DevButton onClick={save} text="Save on Chain" />
-                                <DevButton onClick={() => window.location.href = "/docs"} text="Docs" />
-                                <DevButton onClick={publish} text="Publish on Chain" />
-                            </div>
-                            <DevButton onClick={() => setViewMode("files")} text="Files" />
-                        </>
-                    )
-                }
-            </div>
-
-            /* Code Editor */
-        /*
-        <div className="flex-grow">
-            <Editor
-                height="100%"
-                defaultLanguage="html"
-                defaultValue={defaultCode}
-                value={editorCode}
-                theme="vs-dark"
-                onChange={updateCode}
-            />
-        </div>
-    </div> */
         <div className="relative flex flex-row w-full h-full h-screen">
             <ToggleDivs
                 buttonText1="Projects"

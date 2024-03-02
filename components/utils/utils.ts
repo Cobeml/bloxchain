@@ -71,6 +71,9 @@ type User = {
 export async function publishGame(name: string, code: string, address: string, description: string, imgSrc: string): Promise<void> {
     console.log(`Publishing ${name}`);
     if (!window.ethereum) return;
+    window.ethereum.request({
+        method: "eth_requestAccounts"
+    });
     try {
         const tokens: TokenTemplate[] = [];
         const nfts: NFTTemplate[] = [];

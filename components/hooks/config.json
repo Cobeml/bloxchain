@@ -1,12 +1,4 @@
-{
-    "0x31337": {
-        "name": "Localhost",
-        "contractAddress": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-        "privKey": "1013bc81f42776bc452b302702fff266d168af17fb2fa8afcc9d78e4d19b82b3",
-        "symbol": "ETH",
-        "blockExplorer": "",
-        "rpcURL": "http://127.0.0.1:8545/"
-    },
+{    
     "0x66eee": {
         "name": "Arbitrum Sepolia",
         "contractAddress": "0xbB079E4242Ec6d29B970C989BB6C4C1D1Ff93f24",
