@@ -21,7 +21,7 @@ function Sidebar({ sections, onSectionChange }: { sections: string[], onSectionC
     </div>
   );
 };
-const sections: string[] = ["What is it?", "Welcome!", "Project Structure", "Leaderboard", "Shop"];
+const sections: string[] = ["Welcome!", "Project Structure", "Leaderboard", "Shop"];
 
 export default function Docs() {
   const [currentSection, setCurrentSection] = useState<string>(sections[0]);
@@ -37,7 +37,7 @@ export default function Docs() {
         {
           (function (currentSection: string) {
             switch (currentSection) {
-              case "What is it?": {
+              case "Welcome!": {
                 return (
                   <ul>
                     <li>Bloxchain is a new platform to develop blockchain games</li>
@@ -56,19 +56,6 @@ export default function Docs() {
                     <li>Dao members can vote on updates to the game</li>
                     <li>Also connect your game to our in-game shop {"(where players can buy and list in game assets)"} and leaderboard, again without writing any contract logic</li>
                     <li>All of this is built so far - try it!</li>
-                  </ul>
-                );
-              }
-              case "Welcome!": {
-                return (
-                  <ul>
-                    <li>Welcome to Bloxchain!</li>
-                    <li>Bloxchain allows you to develop blockchain web games without
-                      writing any contract code</li>
-                    <li>Using WASM, you can write your code in any language!</li>
-                    <li>{`You'll communicate with our API from within your game to 
-                interact with the player's on chain data`}</li>
-                    <li>{"Let's get started!"}</li>
                   </ul>
                 );
               }

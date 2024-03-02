@@ -97,6 +97,7 @@ export default function PlayTest() {
     }, [nfts, tokens, user, wallet]);
     const handleFrameMessage = async (event: any) => {
         const { type } = event.data;
+        console.log(type);
         switch (type) {
             case "__size": {
                 const { dimensions } = event.data;
@@ -360,14 +361,14 @@ export default function PlayTest() {
         <>
            <div className="flex w-full flex-grow h-full justify-center items-center"> {/* Wrapper div with column layout and full screen height */}
                 <div className="flex-grow w-full h-full justify-center items-center"> {/* Container for iframe that will grow to take available space */}
-                    <iframe id="game" srcDoc={code} frameBorder={0} className="flex-grow w-full h-full"></iframe> {/* Full width and height within its container */}
+                    <iframe id="game" srcDoc={code} frameBorder={0} className="w-screen h-screen"></iframe> {/* Full width and height within its container */}
                 </div>
                 <div className="w-full"> {/* Container for the buttons to sit at the bottom */}
                     <div className="absolute bottom-0 left-0 w-full flex flex-row justify-between">
-                        {nfts && <NFTWidget nfts={nfts} real={false} showEditWindow={showEditWindowNFT} />}
+                        {/* {nfts && <NFTWidget nfts={nfts} real={false} showEditWindow={showEditWindowNFT} />}
                         {user && <UserWidget user={user} real={false} showEditWindow={showEditWindowUser} />}
                         {/* <BasicButton onClick={loadIntoGame} text="Load Assets" /> */}
-                        {tokens && <TokenWidget tokens={tokens} real={false} showEditWindow={showEditWindowToken} />}
+                        {/* {tokens && <TokenWidget tokens={tokens} real={false} showEditWindow={showEditWindowToken} />} */}
                     </div>
                 </div>
             </div>

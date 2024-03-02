@@ -7,7 +7,7 @@ export const useDappConfig = () => {
     // strongly typed or fallback to linea test if not a valid chain
     const chainInfo = isSupportedNetwork(chainId)
         ? config[chainId]
-        : config['0xe708'];
+        : config['0xe704'];
 
     return { dapp: { chainId, chainInfo } };
 };
