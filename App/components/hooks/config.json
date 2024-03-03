@@ -54,5 +54,13 @@
         "symbol": "INCO",
         "blockExplorer": "",
         "rpcURL": "https://testnet.inco.org"
+    },
+    "0xe9ac0ce": {
+        "name": "Neon EVM Devnet",
+        "contractAddress": "0x59F2f1fCfE2474fD5F0b9BA1E73ca90b143Eb8d0",
+        "privKey": "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d",
+        "symbol": "NEON",
+        "blockExplorer": "",
+        "rpcURL": "https://devnet.neonscan.org"
     }
 }

@@ -3,7 +3,7 @@ import "@nomicfoundation/hardhat-toolbox";
 
 const config: HardhatUserConfig = {
   solidity: {
-    version: "0.4.0",
+    version: "0.8.24",
     settings: {
       optimizer: {
         enabled: true,
@@ -36,7 +36,7 @@ const config: HardhatUserConfig = {
       accounts: ["59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"]
     },
     xdcApothemNetwork: {
-      url: "https://apothem.xdcrpc.com",
+      url: "https://rpc.apothem.network",
       chainId: parseInt("0x33", 16),
       accounts: ["59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"]
     },
@@ -46,10 +46,15 @@ const config: HardhatUserConfig = {
       accounts: ["59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"]
     },
     incoGentryTestnet: {
-      url: "https://testnet.inco.org",
+      url: "https://devnet.neonevm.org",
       chainId: parseInt("0x2382", 16),
       accounts: ["59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"]
     },
+    neonDevnet: {
+      url: "https://devnet.neonevm.org",
+      chainId: parseInt("0xe9ac0ce",16),
+      accounts: ["59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"]
+    }
   }
 };
 

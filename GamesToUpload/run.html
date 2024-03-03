@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script id="setup">
+        // function is evaluated when game is uploaded. 
+        // Not evaluated in each play
+        // Not saved on chain
+        function setup() {
+            return {
+                nfts: [  
+                    {
+                        name: "Blox",
+                        description: "A Blox",
+                        abbr: "BLOX",
+                        data: {
+                        }
+                    }
+                    /*
+                    {
+                    name: // collection name
+                    description: // collection description
+                    abbr: // token abbreviation
+                    data: // template of data you want stored on each nft ex. {health: 100, damage: 200}...
+                    }
+                    */
+                ],
+                tokens: [
+                    {
+                        name: "Sweat Token",
+                        description: "Token earned by playing this game",
+                        abbr: "SWEAT",
+                        supply: 100_000_000_000
+                    }
+                    /*
+                    {
+                    name: // token name
+                    description: // token description
+                    abbr: // token abbreviation
+                    supply: // token max supply
+                    }
+                    */
+                ],
+                user: {
+                    highScore: 0, // values will always default to zero
+                }
+                /* 
+                {
+                key, int pairs of data
+                }
+                */
+
+            }
+        }
+    </script>
+    <title>$RUN</title>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #89cff0;
+            min-width: 100vw;
+        }
+
+        .game {
+            overflow: hidden;
+            position: relative;
+        }
+
+        button {
+            position: fixed;
+            margin-top: 1px;
+        }
+
+        .nftTotalScore {
+            position: absolute;
+            font-size: 3vmin;
+            right: 30vmin;
+            top: 4vmin;
+        }
+
+        .sweatTotalScore {
+            position: absolute;
+            font-size: 3vmin;
+            right: 30vmin;
+            top: 1vmin;
+        }
+
+        .score {
+            position: absolute;
+            font-size: 3vmin;
+            right: 1vmin;
+            top: 1vmin;
+        }
+
+        .rounded-button {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            margin: 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button1 {
+            position: absolute;
+            font-size: 3vmin;
+            left: 1vmin;
+            top: 1vmin;
+        }
+
+        .button2 {
+            position: absolute;
+            font-size: 3vmin;
+            left: 20vmin;
+            top: 1vmin;
+        }
+
+
+
+        .score1 {
+            position: absolute;
+            font-size: 3vmin;
+            right: 1vmin;
+            top: 4vmin;
+        }
+
+
+        .start-screen {
+            position: absolute;
+            font-size: 5vmin;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .ground {
+            --left: 0;
+            position: absolute;
+            width: 300%;
+            bottom: 0;
+            left: calc(var(--left) * 1%)
+        }
+
+        .player {
+            --bottom: 0;
+            position: absolute;
+            left: 1%;
+            height: 30%;
+            bottom: calc(var(--bottom) * 1%);
+        }
+
+        .obstacle {
+            position: absolute;
+            left: calc(var(--left) * 1%);
+            height: 30%;
+            bottom: 0;
+        }
+
+        .nft {
+            position: absolute;
+            left: calc(var(--left) * 1%);
+            height: 30%;
+            bottom: calc(var(--bottom) * 0%);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .rounded-button {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            margin: 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button1 {
+            background-color: #800080;
+            color: #fff;
+        }
+
+        .button2 {
+            background-color: #00BFBF;
+            color: #fff;
+        }
+    </style>
+    <script type="module">
+        function getCustomProperty(elem, prop) {
+            return parseFloat(getComputedStyle(elem).getPropertyValue(prop)) || 0
+        }
+
+        function setCustomProperty(elem, prop, value) {
+            elem.style.setProperty(prop, value)
+        }
+
+        function incrementCustomProperty(elem, prop, inc) {
+            setCustomProperty(elem, prop, getCustomProperty(elem, prop) + inc)
+        }
+
+        const SPEED = 0.05
+        const groundElems = document.querySelectorAll("[data-ground]")
+
+        function setupGround() {
+            setCustomProperty(groundElems[0], "--left", 0)
+            setCustomProperty(groundElems[1], "--left", 300)
+        }
+
+        function updateGround(delta, speedScale) {
+            groundElems.forEach(ground => {
+                incrementCustomProperty(ground, "--left", delta * speedScale * SPEED * -1)
+                if (getCustomProperty(ground, "--left") <= -300) {
+                    incrementCustomProperty(ground, "--left", 600)
+                }
+            })
+        }
+
+        const JUMP_SPEED = 0.45
+        const GRAVITY = 0.0015
+        const PLAYER_FRAME_COUNT = 2
+        const FRAME_TIME = 100
+
+        const playerElem = document.querySelector("[data-player]")
+
+        let isJumping
+        let playerFrame
+        let currentTimeFrame
+        let yVelocity
+        function setupPlayer() {
+            isJumping = false
+            playerFrame = 0
+            currentTimeFrame = 0
+            yVelocity = 0
+            setCustomProperty(playerElem, "--bottom", 0)
+            document.removeEventListener("keydown", onJump)
+            document.addEventListener("keydown", onJump)
+        }
+
+        function updatePlayer(delta, speedScale) {
+            handleRun(delta, speedScale)
+            handleJump(delta)
+        }
+
+        function getPlayerRect() {
+            return playerElem.getBoundingClientRect()
+        }
+
+        function setPlayerLose() {
+            playerElem.src = `https://ai-crypto-app-6969696969.s3.amazonaws.com/RunGame/imgs/playerJumps.png`
+        }
+
+        function handleRun(delta, speedScale) {
+            if (isJumping) {
+                playerElem.src = `https://ai-crypto-app-6969696969.s3.amazonaws.com/RunGame/imgs/playerJumps.png`
+                return
+            }
+
+            if (currentTimeFrame >= FRAME_TIME) {
+                playerFrame = (playerFrame + 1) % PLAYER_FRAME_COUNT
+                playerElem.src = `https://ai-crypto-app-6969696969.s3.amazonaws.com/RunGame/imgs/playerRuns${playerFrame}.png`
+                currentTimeFrame -= FRAME_TIME
+            }
+            currentTimeFrame += delta * speedScale
+        }
+
+        function handleJump(delta) {
+            if (!isJumping) return
+            incrementCustomProperty(playerElem, "--bottom", yVelocity * delta)
+            if (getCustomProperty(playerElem, "--bottom") <= 0) {
+                setCustomProperty(playerElem, "--bottom", 0)
+                isJumping = false
+            }
+            yVelocity -= GRAVITY * delta
+        }
+
+        function onJump(e) {
+            if (e.code !== "Space" || isJumping) return
+
+            yVelocity = JUMP_SPEED
+            isJumping = true
+        }
+
+        const OBSTACLE_INTERVAL_MIN = 500
+        const OBSTACLE_INTERVAL_MAX = 2000
+
+        const worldElem = document.querySelector("[data-game]")
+
+        let nextObstacleTime
+        function setupObstacle() {
+            nextObstacleTime = OBSTACLE_INTERVAL_MIN
+
+            document.querySelectorAll("[data-obstacle]").forEach(obstacle => {
+                obstacle.remove()
+            })
+        }
+
+        function updateObstacle(delta, speedScale) {
+            document.querySelectorAll("[data-obstacle]").forEach(obstacle => {
+                incrementCustomProperty(obstacle, "--left", delta * speedScale * SPEED * -1)
+                if (getCustomProperty(obstacle, "--left") <= -100) {
+                    obstacle.remove()
+                }
+            })
+
+            if (nextObstacleTime <= 0) {
+                createObstacle()
+
+                nextObstacleTime = randomNumberBetween(OBSTACLE_INTERVAL_MIN, OBSTACLE_INTERVAL_MAX) / speedScale
+            }
+
+            nextObstacleTime -= delta
+        }
+
+        function getObstacleRects() {
+            return [...document.querySelectorAll("[data-obstacle]")].map(obstacle => {
+                return obstacle.getBoundingClientRect()
+            })
+        }
+
+        function createObstacle() {
+            const obstacle = document.createElement("img")
+            obstacle.dataset.obstacle = true
+
+            obstacle.src = `https://ai-crypto-app-6969696969.s3.amazonaws.com/RunGame/imgs/obstacle.png`
+
+            obstacle.classList.add("obstacle")
+            setCustomProperty(obstacle, "--left", 100)
+            worldElem.append(obstacle)
+        }
+
+        function randomNumberBetween(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min)
+        }
+
+        const gameElem = document.querySelector("[data-game]")
+
+        let nextNFTTime
+        function setupNFT() {
+            nextNFTTime = OBSTACLE_INTERVAL_MIN
+
+            document.querySelectorAll("[data-nft]").forEach(nft => {
+                nft.remove()
+            })
+        }
+
+        function updateNFT(delta, speedScale) {
+            document.querySelectorAll("[data-nft]").forEach(nft => {
+                incrementCustomProperty(nft, "--left", delta * speedScale * SPEED * -1)
+                if (getCustomProperty(nft, "--left") <= -100) {
+                    nft.remove()
+                }
+            })
+
+            if (nextNFTTime <= 0) {
+                createNFT()
+
+                nextNFTTime = randomNumberBetween(OBSTACLE_INTERVAL_MIN, OBSTACLE_INTERVAL_MAX) / speedScale
+            }
+
+            nextNFTTime -= delta
+        }
+
+        function getNFTRects() {
+            return [...document.querySelectorAll("[data-nft]")].map(nft => {
+                return nft.getBoundingClientRect()
+            })
+        }
+
+        function createNFT() {
+            const nft = document.createElement("img")
+            nft.dataset.nft = true
+
+            nft.src = `https://ai-crypto-app-6969696969.s3.amazonaws.com/RunGame/imgs/nft.png`
+
+            nft.classList.add("nft")
+            setCustomProperty(nft, "--left", 100)
+            gameElem.append(nft)
+        }
+
+        const GAME_WIDTH = 100
+        const GAME_HEIGHT = 30
+        const SPEED_SCALE_INCREASE = 0.00001
+
+        const scoreElem = document.querySelector("[data-score]")
+        const startScreenElem = document.querySelector("[data-start-screen]")
+        const sweatTotalScoreElem = document.querySelector("[data-sweat-total-score]")
+        const nftTotalScoreElem = document.querySelector("[data-nft-total-score]")
+        const nftScoreElem = document.querySelector("[data-nft-score]")
+
+        setPixelToGameScale()
+        window.addEventListener("resize", setPixelToGameScale)
+        document.addEventListener("keydown", handleStart, { once: true })
+
+        let lastTime
+        let speedScale
+        let score
+        let nftScore = 0
+
+        function update(time) {
+            if (lastTime === null) {
+                lastTime = time
+                window.requestAnimationFrame(update)
+                return
+            }
+
+            const delta = time - lastTime
+
+            updateGround(delta, speedScale)
+            updatePlayer(delta, speedScale)
+            updateObstacle(delta, speedScale)
+            updateNFT(delta, speedScale)
+            updateSpeedScale(delta, speedScale)
+            updateScore(delta, speedScale)
+            checkIfWeGotNFT()
+            // if there is a collision lose the game
+            if (checkLose()) return handleLose()
+            lastTime = time
+            window.requestAnimationFrame(update)
+        }
+
+        function checkLose() {
+            const playerRect = getPlayerRect()
+            return getObstacleRects().some(rect => isCollision(rect, playerRect))
+        }
+
+        function isCollision(rect1, rect2) {
+            return (
+                rect1.left < rect2.right &&
+                rect1.top < rect2.bottom &&
+                rect1.right > rect2.left &&
+                rect1.bottom > rect2.top
+            )
+        }
+
+        function checkIfWeGotNFT() {
+            const playerRect = getPlayerRect()
+            if (getNFTRects().some(rect => isCollision(rect, playerRect))) {
+                const nftToRemove = document.querySelectorAll("[data-nft]")[0]
+                nftToRemove.remove()
+                nftScore += 1
+                nftScoreElem.textContent = `NFT Score: ${nftScore}`
+            }
+            return getNFTRects().some(rect => isCollision(rect, playerRect))
+        }
+
+        function updateSpeedScale(delta) {
+            speedScale += delta * SPEED_SCALE_INCREASE
+        }
+
+        function updateScore(delta) {
+            score += delta * 0.01
+            scoreElem.textContent = `SWEAT score: ${Math.floor(score)}`
+        }
+
+        function handleStart() {
+            lastTime = null
+            speedScale = 1
+            score = 0
+            setupGround()
+            setupPlayer()
+            setupObstacle()
+            setupNFT()
+            startScreenElem.classList.add("hide")
+
+            window.requestAnimationFrame(update)
+        }
+
+        window.totalNFTScore = 0
+        window.totalSWEATScore = 0
+
+        function handleLose() {
+            window.totalSWEATScore += Math.floor(score)
+            window.totalNFTScore += nftScore
+
+            nftTotalScoreElem.textContent = `NFT total score: ${window.totalNFTScore}`
+            sweatTotalScoreElem.textContent = `SWEAT total score: ${window.totalSWEATScore}`
+
+            nftScore = 0
+            nftScoreElem.textContent = `NFT score: ${nftScore}`
+            setPlayerLose()
+            setTimeout(() => {
+                document.addEventListener("keydown", handleStart, { once: true })
+                startScreenElem.classList.remove("hide")
+            }, 100);
+        }
+
+        function setPixelToGameScale() {
+            let gameToPixelScale
+            if (window.innerWidth / window.innerHeight < GAME_WIDTH / GAME_HEIGHT) {
+                gameToPixelScale = window.innerWidth / GAME_WIDTH
+            } else {
+                gameToPixelScale = window.innerHeight / GAME_HEIGHT
+            }
+
+            gameElem.style.width = `${GAME_WIDTH * gameToPixelScale}px`
+            gameElem.style.height = `${GAME_HEIGHT * gameToPixelScale}px`
+
+        }
+    </script>
+</head>
+
+<body>
+    <button class="rounded-button button1" onclick="claimNft()">Claim NFT</button>
+    <button class="rounded-button button2" onclick="claimTokens()">Claim Tokens</button>
+
+    <span class="nftTotalScore" data-nft-total-score>NFT Total Score: 0</span>
+    <span class="sweatTotalScore" data-sweat-total-score>SWEAT Total Score: 0</span>
+    <span class="score1" data-nft-score>NFT Score: 0</span>
+    <span class="score" data-score>SWEAT Score: 0</span>
+    <div class="game" data-game>
+        <div class="start-screen" data-start-screen>Press Any Key To Start</div>
+        <img src="https://ai-crypto-app-6969696969.s3.amazonaws.com/RunGame/imgs/ground.png" alt="" class="ground"
+            data-ground>
+        <img src="https://ai-crypto-app-6969696969.s3.amazonaws.com/RunGame/imgs/ground.png" alt="" class="ground"
+            data-ground>
+        <img src="https://ai-crypto-app-6969696969.s3.amazonaws.com/RunGame/imgs/playerStands.png" alt="" class="player"
+            data-player>
+    </div>
+    <script>
+        // this script sizes the iframe. Do not change it
+        window.onload = () => {
+            const dimensions = { width: document.body.scrollWidth, height: document.body.scrollHeight };
+            window.parent.postMessage({ dimensions, type: "__size" }); // Adjust target origin as needed for security
+        };
+        </script>
+    <script type="application/javascript">
+        // ask josh if this is correct signera dn second argument
+
+        async function claimTokens() {
+            await awaitObjectDefinition(10000000);
+            let amountToClaim = window.totalSWEATScore;
+            let tokenAddress = token.get("Sweat Token").address;
+            console.log(tokenAddress);
+            let status = await sendTransactionToFrontendAndWait("__tokenToUser", (Math.random()).toString(), { address: tokenAddress, amount: amountToClaim });
+            await requestItemsUpdate();
+        }
+
+        async function claimNft() {
+            await awaitObjectDefinition(10000000);
+            const nftScore = window.totalNFTScore;
+            for (let i = 0; i < nftScore; i++) {
+                let status = await sendTransactionToFrontendAndWait("__mintNFT", (Math.random()).toString(), { address: NFT.get("Blox").address, key: (Math.random()).toString() });
+            }
+            await requestItemsUpdate();
+        }
+    </script>
+</body>
+
+</html>

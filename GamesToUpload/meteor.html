@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="icon" href="./public/favicon.ico?v=2" />
+    <link rel="apple-touch-icon" href="./public/favicon.png " />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/addons/p5.sound.min.js"></script>
+    <script src="https://kit.fontawesome.com/54f5c6a52b.js" crossorigin="anonymous"></script>
+    <script id="setup">
+        // function is evaluated when game is uploaded. 
+        // Not evaluated in each play
+        // Not saved on chain
+        function setup() {
+            return {
+                nfts: [  
+                    {
+                        name: "Meteor",
+                        description: "A Meteor",
+                        abbr: "MTEOR",
+                        data: {
+                        }
+                    }
+                    /*
+                    {
+                    name: // collection name
+                    description: // collection description
+                    abbr: // token abbreviation
+                    data: // template of data you want stored on each nft ex. {health: 100, damage: 200}...
+                    }
+                    */
+                ],
+                tokens: [
+                    {
+                        name: "Pebble Token",
+                        description: "Token earned by playing this game",
+                        abbr: "PEBB",
+                        supply: 100_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000
+                    }
+                    /*
+                    {
+                    name: // token name
+                    description: // token description
+                    abbr: // token abbreviation
+                    supply: // token max supply
+                    }
+                    */
+                ],
+                user: {
+                    highScore: 0, // values will always default to zero
+                }
+                /* 
+                {
+                key, int pairs of data
+                }
+                */
+
+            }
+        }
+    </script>
+
+    <style>
+        canvas {
+            padding: 0;
+            margin: 0 auto;
+        }
+
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #89cff0;
+            min-width: 100vw;
+        }
+
+        h3 {
+            margin: 5px 0;
+        }
+
+        p {
+            display: inline;
+        }
+
+        a,
+        a:visited {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn {
+            position: absolute;
+            width: 30px;
+            top: 72%;
+            right: 0.5%;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .info:hover+.instructions {
+            /* height: calc(100%0px); */
+            padding: 20px 40px;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            right: 2%;
+            gap: 30px;
+            top: 45%;
+            width: 250px;
+            border-radius: 30px;
+            /* vertical-align: center; */
+            background-color: #0c3747;
+            position: absolute;
+            color: #bfc0c0;
+        }
+
+        .instructions h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .ctrl {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .enter {
+            /* width: 45px; */
+            fill: white;
+            stroke: yellow;
+            stroke-width: 30px;
+        }
+
+        img {
+            width: 25px;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0px;
+            font-size: 18px;
+        }
+
+        .fa-heart {
+            color: rgb(255, 0, 0);
+        }
+
+        .fa-mug-hot {
+            color: rgb(145, 0, 0);
+        }
+    </style>
+    <title>Space Fighter</title>
+    <meta charset="utf-8" />
+</head>
+
+<body>
+    <a class="github-fork-ribbon right-bottom fixed" href="http://github.com/aman-atg/asteroids-game"
+        data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
+    <script>
+        const ASTEROIDS_NUM = 5;
+        const GAME_LIVES = 5;
+        const FPS = 100;
+        const FRICTION = 0.7;
+        const LASER_DIST = 0.6;
+        const LASER_EXPLODE_DUR = 0.1;
+        const LASER_MAX = 10;
+        const LASER_SPD = 720;
+        const HIGHSCORE_KEY = "highscore";
+        const ROIDS_JAG = 0.335;
+        const ROIDS_PTS_LRG = 20;
+        const ROIDS_PTS_MED = 50;
+        const ROIDS_PTS_SML = 100;
+        const ROIDS_SIZE = 100;
+        const ROIDS_SPD = 160;
+        const ROIDS_VERT = 10;
+        const SHIP_BLINK_DUR = 0.1;
+        const SHIP_EXPLODE_DUR = 0.3;
+        const SHIP_INV_DUR = 1.5;
+        const SHIP_SIZE = 30;
+        const SHIP_THRUST = 5;
+        const TURN_SPEED = 360;
+        const TEXT_FADE_TIME = 2;
+        const TEXT_SIZE = 40;
+    </script>
+    <script>
+        // SHIP
+        var ship;
+        // set up aestroids
+        var roids = [];
+        var level = 0;
+        var lives = GAME_LIVES;
+        var Text;
+        var score = 0;
+        var highScore;
+        // var pause = false;
+        var noSound = false;
+
+        let explode_S, laser_S, music_high_S, music_low_S, thrust_S;
+
+        function preload() {
+            explode_S = loadSound("https://ai-crypto-app-6969696969.s3.amazonaws.com/sounds/Explosion%2B1.mp3");
+            hit_S = loadSound("https://ai-crypto-app-6969696969.s3.amazonaws.com/sounds/hit.m4a");
+            laser_S = loadSound("https://ai-crypto-app-6969696969.s3.amazonaws.com/sounds/laser.m4a");
+            music_high_S = loadSound("https://ai-crypto-app-6969696969.s3.amazonaws.com/sounds/music-high.m4a");
+            music_low_S = loadSound("https://ai-crypto-app-6969696969.s3.amazonaws.com/sounds/music-low.m4a");
+            thrust_S = loadSound("https://ai-crypto-app-6969696969.s3.amazonaws.com/sounds/thrust.m4a");
+            laser_S.playMode("sustain");
+            laser_S.setVolume(0.5);
+            explode_S.setVolume(0.5);
+        }
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight - 25);
+            // music_low_S.loop(); //wroking fine
+            H_width = width / 2;
+            H_height = height / 2;
+            newGame();
+        }
+
+        function draw() {
+            var exploding = ship.explodeTime > 0;
+            var blinking = ship.blinkNum % 2 == 0;
+            background(0);
+            noFill();
+            strokeWeight(1.5);
+            stroke(255);
+
+            if (ship.thrusting && !ship.dead) {
+                if (blinking) {
+                    drawThruster();
+                    if (!thrust_S.isPlaying()) thrust_S.loop();
+                }
+
+                ship.thrust.x += (SHIP_THRUST * cos(ship.a)) / FPS;
+                ship.thrust.y -= (SHIP_THRUST * sin(ship.a)) / FPS;
+            } else {
+                thrust_S.stop();
+
+                ship.thrust.x -= (FRICTION * ship.thrust.x) / FPS;
+                ship.thrust.y -= (FRICTION * ship.thrust.y) / FPS;
+            }
+            if (!exploding) {
+                if (blinking && !ship.dead) drawAirship(ship.x, ship.y, ship.a);
+                // if (!pause)
+                moveShip();
+            } else {
+                explode_S.play();
+                drawExplosion();
+            }
+            if (ship.blinkNum > 0) {
+                ship.blinkTime--;
+                if (ship.blinkTime == 0) {
+                    ship.blinkTime = ceil(SHIP_BLINK_DUR * FPS);
+                    ship.blinkNum--;
+                }
+            }
+
+            ship.explodeTime--;
+            if (ship.explodeTime == 0 && !ship.dead) {
+                lives--;
+                if (lives === 0) gameOver();
+                else ship = newAirship();
+            }
+
+            handleAsteroids(exploding);
+
+            drawLasers();
+
+            if (keyIsPressed && !exploding && !ship.dead) checkKeys();
+
+            drawText(exploding);
+
+        }
+    </script>
+    <script>
+        // ===== START NEW GAME ======
+        const newGame = () => {
+            ship = newAirship();
+
+            if (lsTest()) {
+                var scoreStr = localStorage.getItem(HIGHSCORE_KEY);
+                if (scoreStr == null) highScore = 0;
+                else highScore = parseInt(scoreStr);
+            } else {
+                print("fdsk");
+            }
+
+            newLevel();
+        };
+        // ===== NEW LEVEL =====
+
+        const newLevel = () => {
+            Text = "Level " + (level + 1);
+            textOpc = 255;
+            createAsteroidBelt();
+            if (lives === 0) gameOver();
+        };
+
+        // ===== GAME OVER ======
+        const gameOver = () => {
+            ship.dead = true;
+            Text = "Game Over";
+            textOpc = 255;
+            score = 0;
+            // stop();
+        };
+
+        // ======== MAKING NEW AIRSHIP =========
+        const newAirship = () => ({
+            x: H_width,
+            y: H_height,
+            r: SHIP_SIZE / 2,
+            a: (90 / 180) * PI,
+            blinkNum: SHIP_INV_DUR / SHIP_BLINK_DUR,
+            blinkTime: ceil(SHIP_BLINK_DUR * FPS),
+            canShoot: true,
+            dead: false,
+            explodeTime: 0,
+            lasers: [],
+            rot: 0,
+            thrusting: false,
+            thrust: {
+                x: 0,
+                y: 0,
+            },
+        });
+
+        // ======== MOVE SHIP =========
+        const moveShip = () => {
+            // handle edges of the screen
+            if (ship.x < 0 - ship.r) ship.x = width + ship.r;
+            else if (ship.x > width + ship.r) ship.x = 0 - ship.r;
+            if (ship.y < 0 - ship.r) ship.y = height + ship.r;
+            else if (ship.y > height + ship.r) ship.y = 0 - ship.r;
+
+            // rotate the ship
+            ship.a += ship.rot;
+
+            // move the ship
+            const { x, y } = ship.thrust;
+            ship.x += x;
+            ship.y += y;
+        };
+
+        // ====== EXPLODE THE SHIP =======
+        const explodeShip = () => {
+            ship.explodeTime = ceil(SHIP_EXPLODE_DUR * FPS);
+        };
+
+        // ====== SHOOT LASERS =======
+        const shootLaser = () => {
+            if (ship.canShoot && ship.lasers.length < LASER_MAX) {
+                laser_S.play();
+
+                ship.lasers.push({
+                    x: ship.x + (4 / 3) * ship.r * cos(ship.a),
+                    y: ship.y - (4 / 3) * ship.r * sin(ship.a),
+                    xv: (LASER_SPD * cos(ship.a)) / FPS,
+                    yv: -(LASER_SPD * sin(ship.a)) / FPS,
+                    dist: 0,
+                    explodeTime: 0,
+                });
+            }
+            ship.canShoot = false;
+        };
+
+        // ====== MOVE LASERS =======
+        const moveLasers = laser => {
+            const { x, y, xv, yv, dist } = laser;
+
+            // remove lasers after travelling a certain distance
+            if (dist > LASER_DIST * width) {
+                removeLaser(laser);
+                return;
+            }
+
+            laser.x += xv;
+            laser.y += yv;
+
+            // dist travelled
+            laser.dist += sqrt(pow(xv, 2) + pow(yv, 2));
+
+            // handle edge of screen
+            if (x < 0) laser.x = width;
+            else if (x > width) laser.x = 0;
+            if (y < 0) laser.y = height;
+            else if (y > height) laser.y = 0;
+        };
+
+        // ====== DESTRUCTION =======
+        const destruction = () => {
+            roids.map(roid => {
+                // asteriod props
+                const { x, y, r } = roid;
+
+                // lasers
+                ship.lasers.map(laser => {
+                    if (laser.explodeTime == 0 && dist(laser.x, laser.y, x, y) < r) {
+                        destroyAsteroid(roid);
+                        laser.explodeTime = ceil(LASER_EXPLODE_DUR * FPS);
+                    }
+                });
+            });
+        };
+        const removeLaser = laser => {
+            ship.lasers = ship.lasers.filter(l => l != laser);
+        };
+
+        // ====== DESTROY ASTEROIDS =======
+        const destroyAsteroid = roid => {
+            var { x, y, r } = roid;
+            const R = ROIDS_SIZE / 2;
+
+            hit_S.play();
+            // split the asteroid in two
+            if (r === ceil(R)) {
+                roids.push(newAsteroid(x, y, ceil(R / 2)));
+                roids.push(newAsteroid(x, y, ceil(R / 2)));
+                score += ROIDS_PTS_LRG;
+            } else if (r === ceil(R / 2)) {
+                roids.push(newAsteroid(x, y, ceil(R / 4)));
+                roids.push(newAsteroid(x, y, ceil(R / 4)));
+                score += ROIDS_PTS_MED;
+            }
+            score += ROIDS_PTS_SML;
+            if (score > highScore) {
+                highScore = score;
+                if (lsTest()) localStorage.setItem(HIGHSCORE_KEY, highScore);
+            }
+            // destory it
+            roids = roids.filter(r => r != roid);
+            if (roids.length === 0) {
+                level++;
+                // if (lives === 1) {
+                setTimeout(() => {
+                    newGame();
+                }, 1000);
+                // } else newGame();
+            }
+        };
+
+        // =========== KEY-CONTROLS ============
+        function checkKeys() {
+            // left and right
+            if (keyIsDown(LEFT_ARROW)) {
+                ship.rot = ((TURN_SPEED / 180) * PI) / FPS;
+            } else if (keyIsDown(RIGHT_ARROW)) {
+                ship.rot = ((-TURN_SPEED / 180) * PI) / FPS;
+            }
+            // thrust
+            else if (keyIsDown(UP_ARROW)) {
+                ship.thrusting = true;
+            }
+            // for simultaneously shooting while moving
+            if (keyCode === 32) {
+                shootLaser();
+                ship.canShoot = false;
+            }
+        }
+
+        // when keys are released
+        function keyReleased() {
+            //when left and right keys are released, rotation should be 0
+            if (keyCode === 37 || keyCode === 39) ship.rot = 0;
+            //when up is released, thrust should be 0
+            if (keyCode === 38) {
+                ship.thrusting = false;
+            }
+
+            if (keyCode === 32) ship.canShoot = true;
+
+            if (keyCode === ENTER) {
+                print("ok");
+                noSound = !noSound;
+                controlSound(noSound);
+            }
+        }
+
+        // ====== CHECKING LOCALHOST ======
+        function lsTest() {
+            var test = "test";
+            try {
+                localStorage.setItem(test, test);
+                localStorage.removeItem(test);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // ======= CREATE ASTROID-BELT =======
+        const createAsteroidBelt = () => {
+            var x, y;
+            for (var i = 0; i < ASTEROIDS_NUM + ceil(level * 1.33); i++) {
+                do {
+                    x = floor(random() * width);
+                    y = floor(random() * height);
+                } while (dist(ship.x, ship.y, x, y) < ROIDS_SIZE * 2 + ship.r); // asteroids should not overlap with our ship on inital setup
+
+                roids.push(newAsteroid(x, y, ceil(ROIDS_SIZE / 2)));
+            }
+        };
+
+        controlSound = noSound => {
+            if (noSound) {
+                masterVolume(0);
+            } else {
+                masterVolume(1);
+            }
+        };
+
+        // ====== CREATE ONE ASTROID =====
+        const newAsteroid = (x, y, r) => {
+            var spdInc = 1 + 0.1 * level;
+            var roid = {
+                x,
+                y,
+                xv: (random(ROIDS_SPD) / FPS) * spdInc * (random() < 0.5 ? 1 : -1),
+                yv: (random(ROIDS_SPD) / FPS) * spdInc * (random() < 0.5 ? 1 : -1),
+                r,
+                a: random(PI * 2),
+                vert: random(ROIDS_VERT) + 1 + ROIDS_VERT / 2,
+                offs: [],
+            };
+            // create vertex offsets array
+            for (var i = 0; i < roid.vert; i++) {
+                roid.offs.push(random(ROIDS_JAG * 2) + 1 - ROIDS_JAG);
+            }
+            return roid;
+        };
+
+        // ======= MOVE ASTEROIDS =========
+        const moveAsteroids = roid => {
+            var { xv, yv, x, y, r } = roid;
+
+            roid.x += xv;
+            roid.y += yv;
+            // handle edge of screen
+            // x-dir
+            if (x < 0 - r) {
+                roid.x = width + r;
+            } else if (x > width + r) {
+                roid.x = 0 - r;
+            }
+            // y-dir
+            if (y < 0 - r) {
+                roid.y = height + r;
+            } else if (y > height + r) {
+                roid.y = 0 - r;
+            }
+        };
+
+        // ======= HANDLE ASTEROIDS =========
+        const handleAsteroids = e => {
+            drawAsteroids(e);
+        };
+
+        // ================== >> DRAW FUNCTIONS << ==================
+
+
+        // ===== DRAW TEXT ======
+        const drawText = e => {
+            var textColor = color(255, 255, 255);
+
+            push();
+            noStroke();
+            fill(textColor);
+            if (Text === "Game Over") textSize(TEXT_SIZE * 1.5);
+            else textSize(TEXT_SIZE);
+            //high score
+            push();
+            textAlign(CENTER, CENTER);
+            textSize(TEXT_SIZE * 0.75);
+
+            if (highScore === undefined) highScore = 0;
+            text("BEST " + highScore, H_width, SHIP_SIZE);
+
+            pop();
+
+            // score
+            textAlign(RIGHT, CENTER);
+            if (lives !== 0) text(score, width - SHIP_SIZE / 2, SHIP_SIZE);
+            // game instructions
+            if (textOpc >= 0) {
+                textAlign(CENTER, CENTER);
+                textColor.setAlpha(textOpc);
+                textOpc -= 255 / TEXT_FADE_TIME / FPS;
+                fill(textColor);
+                text(Text, H_width, height * 0.73);
+            } else if (ship.dead) {
+                lives = 3;
+                level = 0;
+                roids = [];
+                newGame();
+            }
+            pop();
+
+            var lifeColor;
+            for (var i = 0; i < lives; i++) {
+                lifeColor = e && i === lives - 1 ? "red" : "white";
+                drawAirship(SHIP_SIZE + i * SHIP_SIZE * 1.2, SHIP_SIZE, HALF_PI, lifeColor);
+            }
+        };
+
+
+        // ====== DRAW AIRSHIP ======
+        const drawAirship = (x, y, a, color = "white") => {
+            const { r } = ship;
+            stroke(color);
+            triangle(
+                //nose of the ship
+                x + (4 / 3) * r * cos(a),
+                y - (4 / 3) * r * sin(a),
+                // rear left
+                x - r * ((2 / 3) * cos(a) + sin(a)),
+                y + r * ((2 / 3) * sin(a) - cos(a)),
+                // rear right
+                x - r * ((2 / 3) * cos(a) - sin(a)),
+                y + r * ((2 / 3) * sin(a) + cos(a))
+            );
+        };
+
+        // ====== DRAW THRUSTER =======
+        const drawThruster = () => {
+            push();
+            fill("red");
+            stroke("yellow");
+            strokeWeight(SHIP_SIZE / 10);
+            triangle(
+                //rear left
+                ship.x - ship.r * ((2 / 3) * cos(ship.a) + 0.5 * sin(ship.a)),
+                ship.y + ship.r * ((2 / 3) * sin(ship.a) - 0.5 * cos(ship.a)),
+                // REAR CENTER behind the ship
+                ship.x - ((ship.r * 5) / 3) * cos(ship.a),
+                ship.y + ((ship.r * 5) / 3) * sin(ship.a),
+                // rear right
+                ship.x - ship.r * ((2 / 3) * cos(ship.a) - 0.5 * sin(ship.a)),
+                ship.y + ship.r * ((2 / 3) * sin(ship.a) + 0.5 * cos(ship.a))
+            );
+            pop(); //remove all styling
+        };
+
+        // ====== DRAW LASER =======
+        const drawLasers = () => {
+            push();
+            fill("salmon");
+
+            ship.lasers.map(laser => {
+                const { x, y } = laser;
+
+                if (laser.explodeTime > 0) {
+                    laser.explodeTime--;
+                    laserExplosion(laser);
+                    if (laser.explodeTime == 0) removeLaser(laser);
+                } else {
+                    circle(x, y, SHIP_SIZE / 15);
+                    // if (!pause)
+                    moveLasers(laser);
+                }
+
+                destruction();
+            });
+            pop();
+        };
+
+        // ====== LASER-EXPLOSION =======
+
+        const laserExplosion = laser => {
+            const { x, y } = laser;
+            const { r } = ship;
+            push();
+            noStroke();
+            fill("orangered");
+            circle(x, y, r * 1.75);
+            fill("salmon");
+            circle(x, y, r * 1.15);
+            fill("pink");
+            circle(x, y, r * 0.75);
+
+            pop();
+        };
+
+        // ====== DRAW EXPLOSION =======
+
+        const drawExplosion = () => {
+            const { x, y, r } = ship;
+            push();
+            noStroke();
+
+            fill("darkred");
+            circle(x, y, r * 3.9);
+            fill("red");
+            circle(x, y, r * 3.6);
+            fill("orange");
+            circle(x, y, r * 2.2);
+            fill("yellow");
+            circle(x, y, r * 1.6);
+            fill("white");
+            circle(x, y, r * 0.7);
+
+            pop();
+        };
+
+        // ====== DRAW ASTEROIDS =======
+        const drawAsteroids = exploding => {
+            push();
+            strokeWeight(SHIP_SIZE / 20);
+            stroke("slategrey");
+
+            roids.map(roid => {
+                // getting all variables from roid
+                const { x, y, r, a, vert, offs } = roid;
+
+                // draw polygon
+                beginShape();
+                vertex(x + r * offs[0] * cos(a), y + r * sin(a));
+                for (var j = 1; j < vert; j++) {
+                    vertex(
+                        x + r * offs[j] * cos(a + (j * PI * 2) / vert),
+                        y + r * offs[j] * sin(a + (j * PI * 2) / vert)
+                    );
+                }
+                endShape(CLOSE);
+
+                //
+                if (
+                    dist(x, y, ship.x, ship.y) < ship.r + r &&
+                    !exploding &&
+                    ship.blinkNum == 0 &&
+                    !ship.dead
+                ) {
+                    explodeShip();
+                    destroyAsteroid(roid);
+                    exploding = true;
+                }
+
+                // move 'em
+                // if (!pause)
+                moveAsteroids(roid);
+            });
+            pop();
+        };
+
+    </script>
+
+    <div class="info">
+        <img class="btn" src="https://ai-crypto-app-6969696969.s3.amazonaws.com/asteroids/public/exclamation.svg"
+            alt="info" />
+    </div>
+    <div class="instructions hide">
+        <div class="howToPlay">
+            <h3>Controls</h3>
+            <span class="ctrl">
+                <span class="text"> Go Left </span>
+                <img src="https://ai-crypto-app-6969696969.s3.amazonaws.com/asteroids/public/left-arrow.png"
+                    alt="left" />
+            </span>
+            <span class="ctrl">
+                <span class="text"> Go Right </span>
+                <img src="https://ai-crypto-app-6969696969.s3.amazonaws.com/asteroids/public/right-arrow.png"
+                    alt="right" />
+            </span>
+            <span class="ctrl">
+                <span class="text"> Boost! </span>
+                <img src="https://ai-crypto-app-6969696969.s3.amazonaws.com/asteroids/public/up-arrow.png" alt="up" />
+            </span>
+        </div>
+        <div class="settings">
+            <h3>Settings</h3>
+            <span class="ctrl">
+                <span class="text"> Sound </span>
+                <img class="enter" src="https://ai-crypto-app-6969696969.s3.amazonaws.com/asteroids/public/enterKey.svg"
+                    alt="Enter" />
+            </span>
+        </div>
+    </div>
+</body>
+
+</html>

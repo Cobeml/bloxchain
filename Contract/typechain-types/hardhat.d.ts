@@ -117,6 +117,42 @@ declare module "hardhat/types/runtime" {
       name: "User",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.User__factory>;
+    getContractFactory(
+      name: "DAO",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.DAO__factory>;
+    getContractFactory(
+      name: "LiquidityPools",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.LiquidityPools__factory>;
+    getContractFactory(
+      name: "Game",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Game__factory>;
+    getContractFactory(
+      name: "GameNFT",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.GameNFT__factory>;
+    getContractFactory(
+      name: "GameShop",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.GameShop__factory>;
+    getContractFactory(
+      name: "GameToken",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.GameToken__factory>;
+    getContractFactory(
+      name: "Leaderboard",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Leaderboard__factory>;
+    getContractFactory(
+      name: "Shop",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Shop__factory>;
+    getContractFactory(
+      name: "User",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.User__factory>;
 
     getContractAt(
       name: "Ownable",
@@ -203,6 +239,51 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.Strings>;
+    getContractAt(
+      name: "DAO",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.DAO>;
+    getContractAt(
+      name: "LiquidityPools",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.LiquidityPools>;
+    getContractAt(
+      name: "Game",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Game>;
+    getContractAt(
+      name: "GameNFT",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.GameNFT>;
+    getContractAt(
+      name: "GameShop",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.GameShop>;
+    getContractAt(
+      name: "GameToken",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.GameToken>;
+    getContractAt(
+      name: "Leaderboard",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Leaderboard>;
+    getContractAt(
+      name: "Shop",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Shop>;
+    getContractAt(
+      name: "User",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.User>;
     getContractAt(
       name: "DAO",
       address: string | ethers.Addressable,
@@ -353,6 +434,42 @@ declare module "hardhat/types/runtime" {
       name: "User",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.User>;
+    deployContract(
+      name: "DAO",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.DAO>;
+    deployContract(
+      name: "LiquidityPools",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.LiquidityPools>;
+    deployContract(
+      name: "Game",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Game>;
+    deployContract(
+      name: "GameNFT",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.GameNFT>;
+    deployContract(
+      name: "GameShop",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.GameShop>;
+    deployContract(
+      name: "GameToken",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.GameToken>;
+    deployContract(
+      name: "Leaderboard",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Leaderboard>;
+    deployContract(
+      name: "Shop",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Shop>;
+    deployContract(
+      name: "User",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.User>;
 
     deployContract(
       name: "Ownable",
@@ -439,6 +556,51 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Strings>;
+    deployContract(
+      name: "DAO",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.DAO>;
+    deployContract(
+      name: "LiquidityPools",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.LiquidityPools>;
+    deployContract(
+      name: "Game",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Game>;
+    deployContract(
+      name: "GameNFT",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.GameNFT>;
+    deployContract(
+      name: "GameShop",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.GameShop>;
+    deployContract(
+      name: "GameToken",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.GameToken>;
+    deployContract(
+      name: "Leaderboard",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Leaderboard>;
+    deployContract(
+      name: "Shop",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Shop>;
+    deployContract(
+      name: "User",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.User>;
     deployContract(
       name: "DAO",
       args: any[],
