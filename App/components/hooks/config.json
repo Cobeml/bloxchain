@@ -1,8 +1,8 @@
 {    
     "0x66eee": {
         "name": "Arbitrum Sepolia",
-        "contractAddress": "0x526373bFd4BBBb6173F0E5BE389540c4D2F5357f",
-        "privKey": "1013bc81f42776bc452b302702fff266d168af17fb2fa8afcc9d78e4d19b82b3",
+        "contractAddress": "0x0Cf17D5DcDA9cF25889cEc9ae5610B0FB9725F65",
+        "privKey": "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d",
         "symbol": "ETH",
         "blockExplorer": "",
         "rpcURL": "https://sepolia-rollup.arbitrum.io/rpc"
@@ -10,23 +10,23 @@
     "0xe704": {
         "name": "Linea Testnet",
         "contractAddress": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-        "privKey": "1013bc81f42776bc452b302702fff266d168af17fb2fa8afcc9d78e4d19b82b3",
-        "symbol": "ETH",
+        "privKey": "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d",
+        "symbol": "LineaETH",
         "blockExplorer": "https://goerli.lineascan.build",
         "rpcURL": "https://linea-goerli.blockpi.network/v1/rpc/public"
     },
     "0x14a34": {
         "name": "Base Sepolia Testnet",
-        "contractAddress": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-        "privKey": "1013bc81f42776bc452b302702fff266d168af17fb2fa8afcc9d78e4d19b82b3",
+        "contractAddress": "0x1e2F4432bFeF9E9Ad39DA6d272F4aFf33629c770",
+        "privKey": "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d",
         "symbol": "ETH",
         "blockExplorer": "https://base-sepolia.blockscout.com",
         "rpcURL": "https://rpc.notadegen.com/base/sepolia"
     },
     "0x6ca": {
         "name": "INEVM",
-        "contractAddress": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-        "privKey": "1013bc81f42776bc452b302702fff266d168af17fb2fa8afcc9d78e4d19b82b3",
+        "contractAddress": "0x8464135c8F25Da09e49BC8782676a84730C318bC",
+        "privKey": "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d",
         "symbol": "INJ",
         "blockExplorer": "",
         "rpcURL": "https://inevm-rpc.caldera.dev"
@@ -34,15 +34,15 @@
     "0x33": {
         "name": "XDC Apothem Network",
         "contractAddress": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-        "privKey": "1013bc81f42776bc452b302702fff266d168af17fb2fa8afcc9d78e4d19b82b3",
+        "privKey": "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d",
         "symbol": "TXDC",
         "blockExplorer": "https://apothem.xinfinscan.com",
         "rpcURL": "https://rpc.apothem.network"
     },
     "0xa455": {
         "name": "Fhenix Frontier",
-        "contractAddress": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-        "privKey": "1013bc81f42776bc452b302702fff266d168af17fb2fa8afcc9d78e4d19b82b3",
+        "contractAddress": "0x8464135c8F25Da09e49BC8782676a84730C318bC",
+        "privKey": "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d",
         "symbol": "tFHE",
         "blockExplorer": "https://explorer.testnet.fhenix.zone/",
         "rpcURL": "https://api.testnet.fhenix.zone:7747/"
@@ -50,7 +50,7 @@
     "0x2382": {
         "name": "Inco Gentry Testnet",
         "contractAddress": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-        "privKey": "1013bc81f42776bc452b302702fff266d168af17fb2fa8afcc9d78e4d19b82b3",
+        "privKey": "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d",
         "symbol": "INCO",
         "blockExplorer": "",
         "rpcURL": "https://testnet.inco.org"

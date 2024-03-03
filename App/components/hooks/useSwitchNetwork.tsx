@@ -9,6 +9,7 @@ import { GameAddressLocalhost, GamePkeyLocalhost } from '../utils/GameABI';
 export const useSwitchNetwork = () => {
     const [contractAddress, setContractAddress] = useState<string>(GameAddressLocalhost);
     const [privKey, setPrivKey] = useState<string>(GamePkeyLocalhost); // yes, this is insecure, in prod we will use next.js server side calling to sign the transaction and send it back
+    console.log(contractAddress);
     const switchNetwork = async (dapp: { chainId: string, chainInfo: typeof config["0x13881"]; }) => {
         if (!isSupportedNetwork(dapp.chainId)) {
             throw new Error('Unsupported network');
