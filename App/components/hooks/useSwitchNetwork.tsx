@@ -10,7 +10,7 @@ export const useSwitchNetwork = () => {
     const [contractAddress, setContractAddress] = useState<string>(GameAddressLocalhost);
     const [privKey, setPrivKey] = useState<string>(GamePkeyLocalhost); // yes, this is insecure, in prod we will use next.js server side calling to sign the transaction and send it back
     console.log(contractAddress);
-    const switchNetwork = async (dapp: { chainId: string, chainInfo: typeof config["0x13881"]; }) => {
+    const switchNetwork = async (dapp: { chainId: string, chainInfo: typeof config["0x66eee"]; }) => {
         if (!isSupportedNetwork(dapp.chainId)) {
             throw new Error('Unsupported network');
         }
@@ -40,7 +40,7 @@ export const useSwitchNetwork = () => {
                                 name: dapp.chainInfo?.name,
                                 symbol: dapp.chainInfo?.symbol,
                             },
-                            rpcUrls: [dapp.chainInfo?.rpcUrl],
+                            rpcUrls: [dapp.chainInfo?.rpcURL],
                         },
                     ],
                 });
